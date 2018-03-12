@@ -1,0 +1,2 @@
+node analizador.js
+pause
