@@ -2,8 +2,12 @@ var parser = require("./parser").parser;
 var fs = require("fs");
 
 var codigo = fs.readFileSync("test.src", "utf8");
-console.log(exec(codigo));
+exec(codigo);
 
 function exec (input) {
-    return parser.parse(input);
+    console.log( JSON.stringify(parser.parse(input)) );
+}
+
+function showJSON(json){
+  console.log( JSON.stringify(json) );
 }
