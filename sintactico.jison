@@ -5,7 +5,7 @@
     }
 %}
 
-%token num, id, cadenaLit
+%token num, id, cadenaLit, comilla
 %token asigna, mas, menos, por, mayor, o, pto
 %token llaveA, llaveC, parenA, parenC, ptoComa
 %token eof
@@ -35,6 +35,7 @@ E
     | E menos E {{ $$ = { tipo:'menos', hijos:[$1, $3] } }}
     | E por E   {{ $$ = { tipo:'por', hijos:[$1, $3] } }}
     | num       {{ $$ = { tipo:'num', val: Number(yytext) } }}
-    | cadenaLit {{ $$ = { tipo:'cadenaLit', val: yytext } }}
+    | comilla cadenaLit comilla {{ $$ = { tipo:'cadenaLit', val: yytext } }}
+    | comilla comilla {{ $$ = { tipo:'cadenaLit', val: "" } }}
     | id        {{ $$ = { tipo:'id', val: yytext, linea:  @1.first_line, columna:  @1.first_column, lineaF:  @1.last_line, columnaF:  @1.last_column } }}
 ; 
