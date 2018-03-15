@@ -5,11 +5,6 @@
     }
 %}
 
-%token num, id, cadenaLit, comilla
-%token asigna, mas, menos, por, mayor, o, pto
-%token llaveA, llaveC, parenA, parenC, ptoComa
-%token eof
-
 %right asigna
 %left o
 %nonassoc igual mayor
@@ -34,8 +29,11 @@ E
     : E mas E   {{ $$ = { tipo:'mas', hijos:[$1, $3] } }}
     | E menos E {{ $$ = { tipo:'menos', hijos:[$1, $3] } }}
     | E por E   {{ $$ = { tipo:'por', hijos:[$1, $3] } }}
-    | num       {{ $$ = { tipo:'num', val: Number(yytext) } }}
-    | comilla cadenaLit comilla {{ $$ = { tipo:'cadenaLit', val: yytext } }}
-    | comilla comilla {{ $$ = { tipo:'cadenaLit', val: "" } }}
+    | booleanoLit       {{ $$ = { tipo:'booleanoLit', val: yytext.toLowerCase() == 'verdadero' } }}
+    | enteroLit       {{ $$ = { tipo:'enteroLit', val: parseInt(yytext) } }}
+    | decimalLit       {{ $$ = { tipo:'decimalLit', val: parseFloat(yytext) } }}
+    | cadenaLit {{ $$ = { tipo:'cadenaLit', val: yytext } }}    
+    | caracterLit {{ $$ = { tipo:'caracterLit', val: yytext.charCodeAt(0) } }}    
     | id        {{ $$ = { tipo:'id', val: yytext, linea:  @1.first_line, columna:  @1.first_column, lineaF:  @1.last_line, columnaF:  @1.last_column } }}
+    | errorLex     {{ $$ = { tipo:'errorLex', val: yytext } }}   
 ; 

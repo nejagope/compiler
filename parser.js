@@ -72,14 +72,14 @@
   }
 */
 var parser = (function(){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,4],$V1=[1,5],$V2=[1,6],$V3=[1,6,10,11,13],$V4=[1,9],$V5=[1,10],$V6=[1,11],$V7=[1,6,7,8,9,10,11,13],$V8=[1,6,7,8,10,11,13];
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,4],$V1=[1,5],$V2=[1,6],$V3=[1,7],$V4=[1,8],$V5=[1,9],$V6=[1,10],$V7=[1,6,10,11,12,13,14,15,16],$V8=[1,13],$V9=[1,14],$Va=[1,15],$Vb=[1,6,7,8,9,10,11,12,13,14,15,16],$Vc=[1,6,7,8,10,11,12,13,14,15,16];
 var parser = {trace: function trace() {
         Jison.print.apply(null, arguments);
     },
 yy: {},
-symbols_: {"error":2,"PROG":3,"EXPS":4,"E":5,"eof":6,"mas":7,"menos":8,"por":9,"num":10,"comilla":11,"cadenaLit":12,"id":13,"$accept":0,"$end":1},
-terminals_: {2:"error",6:"eof",7:"mas",8:"menos",9:"por",10:"num",11:"comilla",12:"cadenaLit",13:"id"},
-productions_: [0,[3,1],[4,2],[4,2],[4,1],[5,3],[5,3],[5,3],[5,1],[5,3],[5,2],[5,1]],
+symbols_: {"error":2,"PROG":3,"EXPS":4,"E":5,"eof":6,"mas":7,"menos":8,"por":9,"booleanoLit":10,"enteroLit":11,"decimalLit":12,"cadenaLit":13,"caracterLit":14,"id":15,"errorLex":16,"$accept":0,"$end":1},
+terminals_: {2:"error",6:"eof",7:"mas",8:"menos",9:"por",10:"booleanoLit",11:"enteroLit",12:"decimalLit",13:"cadenaLit",14:"caracterLit",15:"id",16:"errorLex"},
+productions_: [0,[3,1],[4,2],[4,2],[4,1],[5,3],[5,3],[5,3],[5,1],[5,1],[5,1],[5,1],[5,1],[5,1],[5,1]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
@@ -107,20 +107,29 @@ case 7:
  this.$ = { tipo:'por', hijos:[$$[$0-2], $$[$0]] } 
 break;
 case 8:
- this.$ = { tipo:'num', val: Number(yytext) } 
+ this.$ = { tipo:'booleanoLit', val: yytext.toLowerCase() == 'verdadero' } 
 break;
 case 9:
- this.$ = { tipo:'cadenaLit', val: yytext } 
+ this.$ = { tipo:'enteroLit', val: parseInt(yytext) } 
 break;
 case 10:
- this.$ = { tipo:'cadenaLit', val: "" } 
+ this.$ = { tipo:'decimalLit', val: parseFloat(yytext) } 
 break;
 case 11:
+ this.$ = { tipo:'cadenaLit', val: yytext } 
+break;
+case 12:
+ this.$ = { tipo:'caracterLit', val: yytext.charCodeAt(0) } 
+break;
+case 13:
  this.$ = { tipo:'id', val: yytext, linea:  _$[$0].first_line, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+break;
+case 14:
+ this.$ = { tipo:'errorLex', val: yytext } 
 break;
 }
 },
-table: [{3:1,4:2,5:3,10:$V0,11:$V1,13:$V2},{1:[3]},{1:[2,1],5:7,6:[1,8],10:$V0,11:$V1,13:$V2},o($V3,[2,4],{7:$V4,8:$V5,9:$V6}),o($V7,[2,8]),{11:[1,13],12:[1,12]},o($V7,[2,11]),o($V3,[2,2],{7:$V4,8:$V5,9:$V6}),o($V3,[2,3]),{5:14,10:$V0,11:$V1,13:$V2},{5:15,10:$V0,11:$V1,13:$V2},{5:16,10:$V0,11:$V1,13:$V2},{11:[1,17]},o($V7,[2,10]),o($V8,[2,5],{9:$V6}),o($V8,[2,6],{9:$V6}),o($V7,[2,7]),o($V7,[2,9])],
+table: [{3:1,4:2,5:3,10:$V0,11:$V1,12:$V2,13:$V3,14:$V4,15:$V5,16:$V6},{1:[3]},{1:[2,1],5:11,6:[1,12],10:$V0,11:$V1,12:$V2,13:$V3,14:$V4,15:$V5,16:$V6},o($V7,[2,4],{7:$V8,8:$V9,9:$Va}),o($Vb,[2,8]),o($Vb,[2,9]),o($Vb,[2,10]),o($Vb,[2,11]),o($Vb,[2,12]),o($Vb,[2,13]),o($Vb,[2,14]),o($V7,[2,2],{7:$V8,8:$V9,9:$Va}),o($V7,[2,3]),{5:16,10:$V0,11:$V1,12:$V2,13:$V3,14:$V4,15:$V5,16:$V6},{5:17,10:$V0,11:$V1,12:$V2,13:$V3,14:$V4,15:$V5,16:$V6},{5:18,10:$V0,11:$V1,12:$V2,13:$V3,14:$V4,15:$V5,16:$V6},o($Vc,[2,5],{9:$Va}),o($Vc,[2,6],{9:$Va}),o($Vb,[2,7])],
 defaultActions: {},
 parseError: function parseError(str, hash) {
     if (hash.recoverable) {
@@ -611,61 +620,96 @@ case 3:/* Se ignora */
 break;
 case 4:throw "Final inesperado de archivo (comentario no cerrado)";
 break;
-case 5: this.pushState('STRING'); return 11; 
+case 5: this.pushState('STRING'); limpiarString(); 
 break;
-case 6: this.popState(); return 11; 
+case 6: this.popState(); yy_.yytext=getString(); return 13; 
 break;
-case 7:throw "Cadena no cerrada antes del fin de línea";	
+case 7: appendString(yy_.yytext); 
 break;
-case 8:return 12;
+case 8: appendString(yy_.yytext); 
 break;
-case 9:throw "Final inesperado de cadena";
+case 9: appendString(yy_.yytext); yy_.yytext=getString(); return 16; 
 break;
-case 10:/* ignorar comentario de línea */
+case 10: this.pushState('CHAR'); limpiarString(); 
 break;
-case 11:/* skip whitespace */
+case 11: 
+                          this.popState(); 
+                          yy_.yytext=getString(); 
+                          if (yy_.yytext.length == 1)
+                            return 14;
+                          else
+                            return 16; 
+                        
 break;
-case 12:return 10
+case 12: appendString(yy_.yytext); 
 break;
-case 13:return 13;
+case 13: appendString(yy_.yytext); 
 break;
-case 14:return 'igual';
+case 14: appendString(yy_.yytext); yy_.yytext=getString(); return 16; 
 break;
-case 15:return 'asigna';
+case 15:/* ignorar comentario de línea */
 break;
-case 16:return 7;
+case 16:/* skip whitespace */
 break;
-case 17:return 8;
+case 17:return 12
 break;
-case 18:return 9;
+case 18:return 11
 break;
-case 19:return 'mayor';
+case 19:return 10
 break;
-case 20:return 'o';
+case 20:return 10
 break;
-case 21:return 'no';
+case 21:return 15;
 break;
-case 22:return 'pto';
+case 22:return 'igual';
 break;
-case 23:return 'llaveA';
+case 23:return 'asigna';
 break;
-case 24:return 'llaveC';
+case 24:return 7;
 break;
-case 25:return 'parenA';
+case 25:return 8;
 break;
-case 26:return 'parenC';
+case 26:return 9;
 break;
-case 27:return 'ptoComa';
+case 27:return 'mayor';
 break;
-case 28:throw 'Illegal character';
+case 28:return 'o';
 break;
-case 29:return 6;
+case 29:return 'no';
+break;
+case 30:return 'pto';
+break;
+case 31:return 'llaveA';
+break;
+case 32:return 'llaveC';
+break;
+case 33:return 'parenA';
+break;
+case 34:return 'parenC';
+break;
+case 35:return 'ptoComa';
+break;
+case 36:return 16
+break;
+case 37:return 16
+break;
+case 38:return 6;
 break;
 }
 },
-rules: [/^(?:\/\*)/,/^(?:\*\/)/,/^(?:(.|\s))/,/^(?:\n)/,/^(?:$)/,/^(?:")/,/^(?:")/,/^(?:(\n|\r))/,/^(?:[^"\r\n]*)/,/^(?:$)/,/^(?:\/\/.*|$)/,/^(?:\s+)/,/^(?:[0-9]+(\.[0-9]+)?\b)/,/^(?:[a-zA-Z][a-zA-Z0-9]*)/,/^(?:==)/,/^(?:=)/,/^(?:\+)/,/^(?:-)/,/^(?:\*)/,/^(?:>)/,/^(?:\|\|)/,/^(?:!)/,/^(?:\.)/,/^(?:\{)/,/^(?:\})/,/^(?:\()/,/^(?:\))/,/^(?:;)/,/^(?:\.)/,/^(?:$)/],
-conditions: {"STRING":{"rules":[6,7,8,9],"inclusive":false},"ML_COMMENT":{"rules":[1,2,3,4],"inclusive":false},"INITIAL":{"rules":[0,5,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29],"inclusive":true}}
+rules: [/^(?:\/\*)/,/^(?:\*\/)/,/^(?:(.|\s))/,/^(?:\n)/,/^(?:$)/,/^(?:")/,/^(?:")/,/^(?:(\n|\r))/,/^(?:[^"\r\n])/,/^(?:$)/,/^(?:')/,/^(?:')/,/^(?:(\n|\r))/,/^(?:[^'\r\n])/,/^(?:$)/,/^(?:\/\/(.|$)*)/,/^(?:\s+)/,/^(?:[0-9]+(\.[0-9]+)\b)/,/^(?:[0-9]+)/,/^(?:verdadero\b)/,/^(?:falso\b)/,/^(?:[a-zA-Z][a-zA-Z0-9]*)/,/^(?:==)/,/^(?:=)/,/^(?:\+)/,/^(?:-)/,/^(?:\*)/,/^(?:>)/,/^(?:\|\|)/,/^(?:!)/,/^(?:\.)/,/^(?:\{)/,/^(?:\})/,/^(?:\()/,/^(?:\))/,/^(?:;)/,/^(?:.+\s)/,/^(?:.+$)/,/^(?:$)/],
+conditions: {"CHAR":{"rules":[11,12,13,14],"inclusive":false},"STRING":{"rules":[6,7,8,9],"inclusive":false},"ML_COMMENT":{"rules":[1,2,3,4],"inclusive":false},"INITIAL":{"rules":[0,5,10,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38],"inclusive":true}}
 });
+var string = "";
+function limpiarString(){
+  string="";
+}
+function appendString(char){
+  string = string + char;
+}
+function getString(){
+  return string;
+};
 return lexer;
 })();
 parser.lexer = lexer;
