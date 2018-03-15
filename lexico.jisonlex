@@ -1,3 +1,5 @@
+%options case-insensitive
+
 %x ML_COMMENT
 %x STRING
 %x CHAR
@@ -59,15 +61,38 @@
 
 [a-zA-Z][a-zA-Z0-9]*        return 'id';
 
+
+"++"                         return 'inc';
+"--"                         return 'dec';
+
+"+="                         return 'masI';
+"*="                         return 'porI';
+"-="                         return 'menosI';
+"/="                         return 'entreI';
+
+">="                         return 'mayorI';
+"<="                         return 'menorI';
+">"                         return 'mayor';
+"<"                         return 'menor';
+"!="                        return 'diferente';
 "=="                        return 'igual';
+
+
+"||"                        return 'o';
+"??"                        return 'xor';
+"&&"                        return 'y';
+"!"                         return 'no';
+
 "="                         return 'asigna';
+
 "+"                         return 'mas';
 "-"                         return 'menos';
 "*"                         return 'por';
-">"                         return 'mayor';
-"||"                        return 'o';
-"!"                         return 'no';
+"/"                         return 'entre';
+"^"                         return 'potencia';
+
 "."                         return 'pto';
+
 "{"                         return 'llaveA';
 "}"                         return 'llaveC';
 "("                         return 'parenA';
