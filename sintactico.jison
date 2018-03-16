@@ -22,13 +22,31 @@
 %start PROG
 
 %%
-PROG : EXPS {{ return $1 }}
+PROG : SENTS {{ return $1 }}
 ;
 
-EXPS
-    : EXPS E    {{ var arr = $1; $$ = arr.concat($2); }}     
-    | EXPS eof  {{ $$ = $1 }}
-    | E         {{ $$ =  [$1] }}     
+SENTS 
+    : SENTS SENT  {{ var arr = $1; $$ = arr.concat($2); }}
+    | SENTS eof   {{ $$ = $1 }}
+    | SENT        {{ $$ =  [$1] }}     
+;
+
+SENT 
+    : ASIGNA {{ $$ = $1 }}
+    
+;
+
+ASIGNA 
+    : ASIGNABLE SIGNO_ASIG E ptoComa {{ $$ = { tipo:$2, hijos:[$1, $3],  linea:  @1.first_line, columna:  @1.first_column, lineaF:  @4.last_line, columnaF:  @4.last_column } }}    
+ ;
+
+SIGNO_ASIG 
+    : asigna {{ $$ = yytext }}
+    | masI {{ $$ = yytext }}
+;
+
+ASIGNABLE :
+      id {{ $$ = $1 }}
 ;
 
 E 
