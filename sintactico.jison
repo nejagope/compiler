@@ -138,6 +138,8 @@ DECLARACIONES
 DECLARACION 
     : TIPO ID            {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}        
     | TIPO ASIGNACION    {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}    
+    | ID ID              {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}    
+    | ID ASIGNACION      {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}    
 ;
 
 TIPO 
@@ -222,5 +224,5 @@ E
 ; 
 
 ID 
-    : id {{ $$ = { tipo:'id', val: yytext, linea:  yylineno, columna:  @1.first_column, lineaF:  @1.last_line, columnaF:  @1.last_column } }} 
+    : id {{ $$ = { tipo:'id', val: yytext.toLowerCase(), linea:  yylineno, columna:  @1.first_column, lineaF:  @1.last_line, columnaF:  @1.last_column } }} 
 ;

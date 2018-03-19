@@ -1,6 +1,8 @@
 ﻿/*comentario 
 inicial*/
 
+Persona p1;
+
 ENCICLAR loop{  
     a.i ++;
 }
