@@ -1,2 +1,1 @@
-jison sintactico.jison lexico.jisonlex -o parser.js -t
-pause
+jison sintactico.jison lexico.jisonlex -o parser.js

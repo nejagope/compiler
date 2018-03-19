@@ -1,19 +1,6 @@
-﻿
-/**
-asd
-* asdsad
-* fsadfsaldf{{ 394050348536835 ññ
-**/
+﻿/*comentario 
+inicial*/
 
-//comentario enmedio
-
-x = "un a {}%a0430ñ  : IDENTIFIER";
-
-y= 34.5+3;
-z = verdAdero ;
-w = falso;
-a +='A';
-
-//comentario añkfdsa ; al final
-
-f = "a\n	";
+ENCICLAR loop{  
+    a.i ++;
+}
