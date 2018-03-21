@@ -1,8 +1,9 @@
 ﻿/*comentario 
 inicial*/
 
-Persona p1;
 
-ENCICLAR loop{  
-    a.i ++;
+protegido Persona suma() {
+    entero a;
+    entero b;
+    retornar suma(a,b);
 }

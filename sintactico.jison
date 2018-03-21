@@ -23,12 +23,12 @@
 %start PROG
 
 %%
-PROG : SENTS {{ return $1 }}
+PROG : SENTS  {{ return $1 }}
+  | SENTS eof {{ return $1 }}
 ;
 
 SENTS 
-    : SENTS SENT  {{ var arr = $1; $$ = arr.concat($2); }}
-    | SENTS eof   {{ $$ = $1 }}
+    : SENTS SENT  {{ var arr = $1; $$ = arr.concat($2); }}    
     | SENT        {{ $$ =  [$1] }}     
 ;
 
@@ -45,15 +45,62 @@ SENT
     | REPETIR_CONTANDO {{ $$ = $1 }}
     | ENCICLAR {{ $$ = $1 }}
     | CONTADOR {{ $$ = $1 }}    
+    | FUNCION  {{ $$ = $1 }} 
+    | LLAMADA ptoComa {{ $$ = $1 }}    
+    | retornar E ptoComa {{ $$ = { tipo:'retornar', hijos:[$2], linea:  yylineno, columna:  @1.first_column, lineaF:  @1.last_line, columnaF:  @1.last_column  } }}       
     | romper ptoComa {{ $$ = { tipo:'romper', val: yytext, linea:  yylineno, columna:  @1.first_column, lineaF:  @1.last_line, columnaF:  @1.last_column  } }}       
     | continuar ptoComa {{ $$ = { tipo:'continuar', val: yytext, linea:  yylineno, columna:  @1.first_column, lineaF:  @1.last_line, columnaF:  @1.last_column  } }}       
     | E inc ptoComa        {{ $$ = { tipo:'++',    hijos:[$1],  linea: yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}
-    | E dec ptoComa        {{ $$ = { tipo:'--',    hijos:[$1],  linea: yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}    
-    //| error '\r\n' {{ $$ = { tipo:'errorSint', val: yytext, linea: yylineno, columna:  @1.first_column} }}
-    //| error '\n' {{ $$ = { tipo:'errorSint', val: yytext, linea: yylineno, columna:  @1.first_column} }}
-    | error ptoComa {{ $$ = { tipo:'errorSint', val: yytext, linea: yylineno, columna:  @1.first_column} }}
-    | error llaveC  {{ $$ = { tipo:'errorSint', val: yytext, linea: yylineno, columna:  @1.first_column} }}
+    | E dec ptoComa        {{ $$ = { tipo:'--',    hijos:[$1],  linea: yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}            
+    | error ptoComa {{ $$ = { tipo:'errorSint', val: yytext, linea: yylineno, columna:  @1.first_column} }}    
+    | error eof     {{ $$ = { tipo:'errorSint', val: yytext, linea: yylineno, columna:  @1.first_column} }}    
 ;
+
+
+VISIBILIDAD
+  : publico   {{ $$ = yytext.toLowerCase() }}
+  | protegido {{ $$ = yytext.toLowerCase() }}
+  | privado   {{ $$ = yytext.toLowerCase() }}  
+;
+
+FUNCION
+  : VISIBILIDAD FUNC   {{ objFun = $2; objFun.visibilidad = $1; $$ = objFun; }}
+  | FUNC               {{ $$ = $1 }}
+;
+
+FUNC 
+  : TIPO  ID parenA PARAMS parenC llaveA SENTS llaveC  
+      {{ $$ = { tipo:'funcion', hijos: [$1, $2, $4, $7],  linea: yylineno, columna:  @1.first_column, lineaF:  @8.last_line, columnaF:  @8.last_column } }}        
+  | ID    ID parenA PARAMS parenC llaveA SENTS llaveC 
+      {{ $$ = { tipo:'funcion', hijos: [$1, $2, $4, $7],  linea: yylineno, columna:  @1.first_column, lineaF:  @8.last_line, columnaF:  @8.last_column } }}        
+  | vacio ID parenA PARAMS parenC llaveA SENTS llaveC  
+      {{ $$ = { tipo:'funcion', hijos: [$1, $2, $4, $7],  linea: yylineno, columna:  @1.first_column, lineaF:  @8.last_line, columnaF:  @8.last_column } }}          
+;
+
+CTOR
+  : ID parenA PARAMS parenC llaveA SENTS llaveC  
+      {{ $$ = { tipo:'ctor', hijos: [$1, $3, $6],  linea: yylineno, columna:  @1.first_column, lineaF:  @7.last_line, columnaF:  @7.last_column } }}        
+;
+
+PARAMS 
+    : PARAMS coma PARAM {{ var arr = $1; $$ = arr.concat($3); }}
+    | PARAM             {{ $$ =  [$1] }}
+    |                   {{ $$ =  [] }}  
+;
+
+PARAM
+  : TIPO ID {{ $$ = { tipo:'param', hijos: [$1, $2],  linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}
+  | ID ID   {{ $$ = { tipo:'param', hijos: [$1, $2],  linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}
+;
+
+
+LLAMADA
+  : ID parenA EXPS parenC
+      {{ $$ = { tipo:'llamada', hijos: [$1, $2],  linea: yylineno, columna:  @1.first_column, lineaF:  @4.last_line, columnaF:  @4.last_column } }}        
+  | ID parenA parenC 
+    {{ $$ = { tipo:'llamada', hijos: [$1],  linea: yylineno, columna:  @1.first_column, lineaF:  @3.last_line, columnaF:  @3.last_column } }}        
+;
+
 
 REPETIR_MIENTRAS
     : repetir_mientras parenA E parenC llaveA SENTS llaveC
@@ -220,6 +267,7 @@ E
                     {{ $$ = { tipo:'nada',        val: null                 , linea:  yylineno, columna:  @1.first_column, lineaF:  @3.last_line, columnaF:  @3.last_column  } }}    
     | ID            {{ $$ = $1 }}
     | ARRAY         {{ $$ = $1 }}
+    | LLAMADA         {{ $$ = $1 }}
     | errorLex      {{ $$ = { tipo:'errorLex'   , val: yytext               , linea:  yylineno, columna:  @1.first_column, lineaF:  @1.last_line, columnaF:  @1.last_column  } }}       
 ; 
 
