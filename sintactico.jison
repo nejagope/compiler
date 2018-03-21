@@ -186,8 +186,8 @@ DECLARACIONES
 DECLARACION 
     : TIPO ID            {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}        
     | ID ID            {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}        
-    | ID ID asigna E           {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}        
-    | TIPO ID asigna E           {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}        
+    | ID ID asigna E           {{ $$ = { tipo:'decl', hijos:[$1, $2, $4],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}        
+    | TIPO ID asigna E           {{ $$ = { tipo:'decl', hijos:[$1, $2, $4],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}        
 ;
 
 TIPO 
