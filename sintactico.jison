@@ -17,6 +17,7 @@
 %left por entre
 %left potencia
 %left inc dec
+%left UMINUS
 
 %left pto
 
@@ -71,7 +72,7 @@ FUNCION
 FUNC 
   : TIPO  ID parenA PARAMS parenC llaveA SENTS llaveC  
       {{ $$ = { tipo:'funcion', hijos: [$1, $2, $4, $7],  linea: yylineno, columna:  @1.first_column, lineaF:  @8.last_line, columnaF:  @8.last_column } }}        
-  | ID    ID parenA PARAMS parenC llaveA SENTS llaveC 
+  | ID  ID parenA PARAMS parenC llaveA SENTS llaveC 
       {{ $$ = { tipo:'funcion', hijos: [$1, $2, $4, $7],  linea: yylineno, columna:  @1.first_column, lineaF:  @8.last_line, columnaF:  @8.last_column } }}        
   | vacio ID parenA PARAMS parenC llaveA SENTS llaveC  
       {{ $$ = { tipo:'funcion', hijos: [$1, $2, $4, $7],  linea: yylineno, columna:  @1.first_column, lineaF:  @8.last_line, columnaF:  @8.last_column } }}          
@@ -90,7 +91,7 @@ PARAMS
 
 PARAM
   : TIPO ID {{ $$ = { tipo:'param', hijos: [$1, $2],  linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}
-  | ID ID   {{ $$ = { tipo:'param', hijos: [$1, $2],  linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}
+  | ID ID   {{ $$ = { tipo:'param', hijos: [$1, $2],  linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}  
 ;
 
 
@@ -184,9 +185,9 @@ DECLARACIONES
 
 DECLARACION 
     : TIPO ID            {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}        
-    | TIPO ASIGNACION    {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}    
-    | ID ID              {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}    
-    | ID ASIGNACION      {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}    
+    | ID ID            {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}        
+    | ID ID asigna E           {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}        
+    | TIPO ID asigna E           {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}        
 ;
 
 TIPO 
@@ -249,6 +250,9 @@ E
     | E xor E   {{ $$ = { tipo:'??',    hijos:[$1, $3], linea: yylineno, columna:  @1.first_column, lineaF:  @3.last_line, columnaF:  @3.last_column } }}
     | E y E     {{ $$ = { tipo:'&&',    hijos:[$1, $3], linea: yylineno, columna:  @1.first_column, lineaF:  @3.last_line, columnaF:  @3.last_column } }}
     | no E      {{ $$ = { tipo:'!',     hijos:[$2],     linea: yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}
+
+    | menos E %prec UMINUS
+                {{ $$ = { tipo:'-',     hijos:[$2],     linea: yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}
 
     | E inc         {{ $$ = { tipo:'++',    hijos:[$1],  linea: yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}
     | E dec         {{ $$ = { tipo:'--',    hijos:[$1],  linea: yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}    

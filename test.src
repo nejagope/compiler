@@ -5,5 +5,6 @@ inicial*/
 protegido Persona suma() {
     entero a;
     entero b;
+    retornar suma();
     retornar suma(a,b);
 }
