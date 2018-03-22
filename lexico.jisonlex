@@ -122,6 +122,8 @@
 "clase"                   return 'clase'
 "hereda_de"               return 'hereda_de'
 "nuevo"                   return 'nuevo'
+"crearPuntero"            return 'crearPuntero'
+
 
 /*-------------------------------------------- FIN PALABRAS RESERVADAS ------------------------------*/
 

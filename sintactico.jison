@@ -48,7 +48,8 @@ SENT
     | ENCICLAR {{ $$ = $1 }}
     | CONTADOR {{ $$ = $1 }}    
     | FUNCION  {{ $$ = $1 }} 
-    | LLAMADA ptoComa {{ $$ = $1 }}       
+    | LLAMADA ptoComa {{ $$ = $1 }}
+    | CREAR_PUNTERO ptoComa {{ $$ = $1 }}       
     | E pto LLAMADA ptoComa  {{ $$ = { tipo:'.',    hijos:[$1, $3],  linea: yylineno, columna:  @1.first_column, lineaF:  @3.last_line, columnaF:  @3.last_column } }}         
     | retornar E ptoComa {{ $$ = { tipo:'retornar', hijos:[$2], linea:  yylineno, columna:  @1.first_column, lineaF:  @1.last_line, columnaF:  @1.last_column  } }}       
     | romper ptoComa {{ $$ = { tipo:'romper', val: yytext, linea:  yylineno, columna:  @1.first_column, lineaF:  @1.last_line, columnaF:  @1.last_column  } }}       
@@ -57,6 +58,13 @@ SENT
     | E dec ptoComa        {{ $$ = { tipo:'--',    hijos:[$1],  linea: yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}            
     | error ptoComa {{ $$ = { tipo:'errorSint', val: yytext, linea: yylineno, columna:  @1.first_column} }}    
     | error eof     {{ $$ = { tipo:'errorSint', val: yytext, linea: yylineno, columna:  @1.first_column} }}    
+;
+
+CREAR_PUNTERO
+  : crearPuntero parenA TIPO coma ID parenC
+      {{ $$ = { tipo:'puntero', hijos: [$3, $5], linea: yylineno, columna:  @1.first_column} }}    
+  | crearPuntero parenA ID coma ID parenC
+      {{ $$ = { tipo:'puntero', hijos: [$3, $5], linea: yylineno, columna:  @1.first_column} }}    
 ;
 
 CLASE 
@@ -292,7 +300,8 @@ E
                     {{ $$ = { tipo:'nada',        val: null                 , linea:  yylineno, columna:  @1.first_column, lineaF:  @3.last_line, columnaF:  @3.last_column  } }}    
     | ID            {{ $$ = $1 }}
     | ARRAY         {{ $$ = $1 }}
-    | LLAMADA         {{ $$ = $1 }}
+    | LLAMADA       {{ $$ = $1 }}
+    | CREAR_PUNTERO {{ $$ = $1 }}
     | errorLex      {{ $$ = { tipo:'errorLex'   , val: yytext               , linea:  yylineno, columna:  @1.first_column, lineaF:  @1.last_line, columnaF:  @1.last_column  } }}       
 ; 
 
