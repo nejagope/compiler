@@ -119,6 +119,9 @@
 "protegido"               return 'protegido'
 
 "@sobrescribir"           return 'sobrescribir'
+"clase"                   return 'clase'
+"hereda_de"               return 'hereda_de'
+"nuevo"                   return 'nuevo'
 
 /*-------------------------------------------- FIN PALABRAS RESERVADAS ------------------------------*/
 

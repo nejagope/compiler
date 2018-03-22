@@ -1,10 +1,17 @@
 ﻿/*comentario 
 inicial*/
 
+clase miclase{
 
-protegido Persona suma() {
-    entero a;
-    entero b;
-    retornar suma();
-    retornar suma(a,b);
+  privado Entero x;
+
+  protegido Persona suma() {
+      entero a;
+      entero b;
+      retornar suma();
+      retornar suma(a,b);
+  }
+
+
+
 }

@@ -35,6 +35,7 @@ SENTS
 
 SENT 
     : ASIGNACION ptoComa {{ $$ = $1 }}
+    | CLASE {{ $$ = $1 }}
     | DECLARACION ptoComa {{ $$ = $1 }}
     | ESTRUCTURA ptoComa {{ $$ = $1 }}
     | EVALUAR_SI {{ $$ = $1 }}
@@ -47,7 +48,8 @@ SENT
     | ENCICLAR {{ $$ = $1 }}
     | CONTADOR {{ $$ = $1 }}    
     | FUNCION  {{ $$ = $1 }} 
-    | LLAMADA ptoComa {{ $$ = $1 }}    
+    | LLAMADA ptoComa {{ $$ = $1 }}       
+    | E pto LLAMADA ptoComa  {{ $$ = { tipo:'.',    hijos:[$1, $3],  linea: yylineno, columna:  @1.first_column, lineaF:  @3.last_line, columnaF:  @3.last_column } }}         
     | retornar E ptoComa {{ $$ = { tipo:'retornar', hijos:[$2], linea:  yylineno, columna:  @1.first_column, lineaF:  @1.last_line, columnaF:  @1.last_column  } }}       
     | romper ptoComa {{ $$ = { tipo:'romper', val: yytext, linea:  yylineno, columna:  @1.first_column, lineaF:  @1.last_line, columnaF:  @1.last_column  } }}       
     | continuar ptoComa {{ $$ = { tipo:'continuar', val: yytext, linea:  yylineno, columna:  @1.first_column, lineaF:  @1.last_line, columnaF:  @1.last_column  } }}       
@@ -55,6 +57,13 @@ SENT
     | E dec ptoComa        {{ $$ = { tipo:'--',    hijos:[$1],  linea: yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}            
     | error ptoComa {{ $$ = { tipo:'errorSint', val: yytext, linea: yylineno, columna:  @1.first_column} }}    
     | error eof     {{ $$ = { tipo:'errorSint', val: yytext, linea: yylineno, columna:  @1.first_column} }}    
+;
+
+CLASE 
+  : clase ID hereda_de ID llaveA SENTS llaveC
+    {{ $$ = { tipo:'clase', hijos: [$2, $4, $6], linea: yylineno, columna:  @1.first_column} }}    
+  | clase ID llaveA SENTS llaveC
+    {{ $$ = { tipo:'clase', hijos: [$2, $4], linea: yylineno, columna:  @1.first_column} }}    
 ;
 
 
@@ -66,27 +75,32 @@ VISIBILIDAD
 
 FUNCION
   : VISIBILIDAD FUNC   {{ objFun = $2; objFun.visibilidad = $1; $$ = objFun; }}
-  | FUNC               {{ $$ = $1 }}
+  | FUNC               {{ $$ = $1 }}  
 ;
 
 FUNC 
-  : TIPO  ID parenA PARAMS parenC llaveA SENTS llaveC  
+  : TIPO ID parenA PARAMS parenC llaveA SENTS llaveC  
       {{ $$ = { tipo:'funcion', hijos: [$1, $2, $4, $7],  linea: yylineno, columna:  @1.first_column, lineaF:  @8.last_line, columnaF:  @8.last_column } }}        
   | ID  ID parenA PARAMS parenC llaveA SENTS llaveC 
       {{ $$ = { tipo:'funcion', hijos: [$1, $2, $4, $7],  linea: yylineno, columna:  @1.first_column, lineaF:  @8.last_line, columnaF:  @8.last_column } }}        
   | vacio ID parenA PARAMS parenC llaveA SENTS llaveC  
       {{ $$ = { tipo:'funcion', hijos: [$1, $2, $4, $7],  linea: yylineno, columna:  @1.first_column, lineaF:  @8.last_line, columnaF:  @8.last_column } }}          
-;
+  | ID parenA PARAMS parenC llaveA SENTS llaveC  
+      {{ $$ = { tipo:'funcion', hijos: [$1, $3, $6],  linea: yylineno, columna:  @1.first_column, lineaF:  @7.last_line, columnaF:  @7.last_column } }}        
 
-CTOR
-  : ID parenA PARAMS parenC llaveA SENTS llaveC  
-      {{ $$ = { tipo:'ctor', hijos: [$1, $3, $6],  linea: yylineno, columna:  @1.first_column, lineaF:  @7.last_line, columnaF:  @7.last_column } }}        
+  | TIPO ID parenA parenC llaveA SENTS llaveC  
+      {{ $$ = { tipo:'funcion', hijos: [$1, $2, $6],  linea: yylineno, columna:  @1.first_column, lineaF:  @7.last_line, columnaF:  @7.last_column } }}        
+  | ID ID parenA parenC llaveA SENTS llaveC 
+      {{ $$ = { tipo:'funcion', hijos: [$1, $2, $6],  linea: yylineno, columna:  @1.first_column, lineaF:  @7.last_line, columnaF:  @7.last_column } }}        
+  | vacio ID parenA parenC llaveA SENTS llaveC  
+      {{ $$ = { tipo:'funcion', hijos: [$1, $2, $6],  linea: yylineno, columna:  @1.first_column, lineaF:  @7.last_line, columnaF:  @7.last_column } }}          
+  | ID parenA parenC llaveA SENTS llaveC  
+      {{ $$ = { tipo:'funcion', hijos: [$1, $5],  linea: yylineno, columna:  @1.first_column, lineaF:  @6.last_line, columnaF:  @6.last_column } }}        
 ;
 
 PARAMS 
     : PARAMS coma PARAM {{ var arr = $1; $$ = arr.concat($3); }}
-    | PARAM             {{ $$ =  [$1] }}
-    |                   {{ $$ =  [] }}  
+    | PARAM             {{ $$ =  [$1] }}    
 ;
 
 PARAM
@@ -183,7 +197,12 @@ DECLARACIONES
     | DECLARACION ptoComa                 {{ $$ =  [$1] }}   
 ;
 
-DECLARACION 
+DECLARACION
+  : DECLARA  {{ $$ = $1 }}
+  | VISIBILIDAD DECLARA {{ objDec = $2; objDec.visibilidad = $1; $$ = objDec; }}
+;
+
+DECLARA 
     : TIPO ID            {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}        
     | ID ID            {{ $$ = { tipo:'decl', hijos:[$1, $2],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}        
     | ID ID asigna E           {{ $$ = { tipo:'decl', hijos:[$1, $2, $4],     linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}        
@@ -250,6 +269,7 @@ E
     | E xor E   {{ $$ = { tipo:'??',    hijos:[$1, $3], linea: yylineno, columna:  @1.first_column, lineaF:  @3.last_line, columnaF:  @3.last_column } }}
     | E y E     {{ $$ = { tipo:'&&',    hijos:[$1, $3], linea: yylineno, columna:  @1.first_column, lineaF:  @3.last_line, columnaF:  @3.last_column } }}
     | no E      {{ $$ = { tipo:'!',     hijos:[$2],     linea: yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}
+    | nuevo LLAMADA   {{ $$ = { tipo:'nuevo',     hijos:[$2],     linea: yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}
 
     | menos E %prec UMINUS
                 {{ $$ = { tipo:'-',     hijos:[$2],     linea: yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}
@@ -257,7 +277,8 @@ E
     | E inc         {{ $$ = { tipo:'++',    hijos:[$1],  linea: yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}
     | E dec         {{ $$ = { tipo:'--',    hijos:[$1],  linea: yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}    
 
-    | E pto E    {{ $$ = { tipo:'.',    hijos:[$1, $3],  linea: yylineno, columna:  @1.first_column, lineaF:  @3.last_line, columnaF:  @3.last_column } }}    
+    | E pto ID    {{ $$ = { tipo:'.',    hijos:[$1, $3],  linea: yylineno, columna:  @1.first_column, lineaF:  @3.last_line, columnaF:  @3.last_column } }}    
+    | E pto LLAMADA    {{ $$ = { tipo:'.',    hijos:[$1, $3],  linea: yylineno, columna:  @1.first_column, lineaF:  @3.last_line, columnaF:  @3.last_column } }}    
     | parenA E parenC   {{ $$ = $2 }}    
     | ID POSICIONES {{ $$ = { tipo:'[]',    hijos:[$1, $2],  linea: yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}    
     
