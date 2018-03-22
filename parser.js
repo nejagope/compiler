@@ -102,34 +102,34 @@ case 6: case 9: case 10: case 11: case 13: case 15: case 16: case 17: case 18: c
  this.$ = $$[$0] 
 break;
 case 21:
- this.$ = { tipo:'.',    hijos:[$$[$0-3], $$[$0-1]],  linea: yylineno, columna:  _$[$0-3].first_column, lineaF:  _$[$0-1].last_line, columnaF:  _$[$0-1].last_column } 
+ this.$ = { nid: nid++, tipo:'.',    hijos:[$$[$0-3], $$[$0-1]],  linea: yylineno, columna:  _$[$0-3].first_column, lineaF:  _$[$0-1].last_line, columnaF:  _$[$0-1].last_column } 
 break;
 case 22:
- this.$ = { tipo:'retornar', hijos:[$$[$0-1]], linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0-2].last_line, columnaF:  _$[$0-2].last_column  } 
+ this.$ = { nid: nid++, tipo:'retornar', hijos:[$$[$0-1]], linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0-2].last_line, columnaF:  _$[$0-2].last_column  } 
 break;
 case 23:
- this.$ = { tipo:'romper', val: yytext, linea:  yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0-1].last_line, columnaF:  _$[$0-1].last_column  } 
+ this.$ = { nid: nid++, tipo:'romper', val: yytext, linea:  yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0-1].last_line, columnaF:  _$[$0-1].last_column  } 
 break;
 case 24:
- this.$ = { tipo:'continuar', val: yytext, linea:  yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0-1].last_line, columnaF:  _$[$0-1].last_column  } 
+ this.$ = { nid: nid++, tipo:'continuar', val: yytext, linea:  yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0-1].last_line, columnaF:  _$[$0-1].last_column  } 
 break;
 case 25:
- this.$ = { tipo:'++',    hijos:[$$[$0-2]],  linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0-1].last_line, columnaF:  _$[$0-1].last_column } 
+ this.$ = { nid: nid++, tipo:'++',    hijos:[$$[$0-2]],  linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0-1].last_line, columnaF:  _$[$0-1].last_column } 
 break;
 case 26:
- this.$ = { tipo:'--',    hijos:[$$[$0-2]],  linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0-1].last_line, columnaF:  _$[$0-1].last_column } 
+ this.$ = { nid: nid++, tipo:'--',    hijos:[$$[$0-2]],  linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0-1].last_line, columnaF:  _$[$0-1].last_column } 
 break;
 case 27: case 28:
- this.$ = { tipo:'errorSint', val: yytext, linea: yylineno, columna:  _$[$0-1].first_column} 
+ this.$ = { nid: nid++, tipo:'errorSint', val: yytext, linea: yylineno, columna:  _$[$0-1].first_column} 
 break;
 case 29: case 30:
- this.$ = { tipo:'puntero', hijos: [$$[$0-3], $$[$0-1]], linea: yylineno, columna:  _$[$0-5].first_column} 
+ this.$ = { nid: nid++, tipo:'puntero', hijos: [$$[$0-3], $$[$0-1]], linea: yylineno, columna:  _$[$0-5].first_column} 
 break;
 case 31:
- this.$ = { tipo:'clase', hijos: [$$[$0-5], $$[$0-3], $$[$0-1]], linea: yylineno, columna:  _$[$0-6].first_column} 
+ this.$ = { nid: nid++, tipo:'clase', hijos: [$$[$0-5], $$[$0-3], $$[$0-1]], linea: yylineno, columna:  _$[$0-6].first_column} 
 break;
 case 32:
- this.$ = { tipo:'clase', hijos: [$$[$0-3], $$[$0-1]], linea: yylineno, columna:  _$[$0-4].first_column} 
+ this.$ = { nid: nid++, tipo:'clase', hijos: [$$[$0-3], $$[$0-1]], linea: yylineno, columna:  _$[$0-4].first_column} 
 break;
 case 33: case 34: case 35: case 63: case 64: case 80: case 81: case 82: case 83: case 84:
  this.$ = yytext.toLowerCase() 
@@ -138,73 +138,73 @@ case 36:
  objFun = $$[$0]; objFun.visibilidad = $$[$0-1]; this.$ = objFun; 
 break;
 case 38: case 39: case 40:
- this.$ = { tipo:'funcion', hijos: [$$[$0-7], $$[$0-6], $$[$0-4], $$[$0-1]],  linea: yylineno, columna:  _$[$0-7].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'funcion', hijos: [$$[$0-7], $$[$0-6], $$[$0-4], $$[$0-1]],  linea: yylineno, columna:  _$[$0-7].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 41:
- this.$ = { tipo:'funcion', hijos: [$$[$0-6], $$[$0-4], $$[$0-1]],  linea: yylineno, columna:  _$[$0-6].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'funcion', hijos: [$$[$0-6], $$[$0-4], $$[$0-1]],  linea: yylineno, columna:  _$[$0-6].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 42: case 43: case 44:
- this.$ = { tipo:'funcion', hijos: [$$[$0-6], $$[$0-5], $$[$0-1]],  linea: yylineno, columna:  _$[$0-6].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'funcion', hijos: [$$[$0-6], $$[$0-5], $$[$0-1]],  linea: yylineno, columna:  _$[$0-6].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 45:
- this.$ = { tipo:'funcion', hijos: [$$[$0-5], $$[$0-1]],  linea: yylineno, columna:  _$[$0-5].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'funcion', hijos: [$$[$0-5], $$[$0-1]],  linea: yylineno, columna:  _$[$0-5].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 46: case 95:
  var arr = $$[$0-2]; this.$ = arr.concat($$[$0]); 
 break;
 case 48: case 49:
- this.$ = { tipo:'param', hijos: [$$[$0-1], $$[$0]],  linea:  yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'param', hijos: [$$[$0-1], $$[$0]],  linea:  yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 50:
- this.$ = { tipo:'llamada', hijos: [$$[$0-3], $$[$0-2]],  linea: yylineno, columna:  _$[$0-3].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'llamada', hijos: [$$[$0-3], $$[$0-2]],  linea: yylineno, columna:  _$[$0-3].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 51:
- this.$ = { tipo:'llamada', hijos: [$$[$0-2]],  linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'llamada', hijos: [$$[$0-2]],  linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 52:
- this.$ = { tipo:'repetir_mientras', hijos: [$$[$0-4], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-6].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'repetir_mientras', hijos: [$$[$0-4], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-6].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 53:
- this.$ = { tipo:'hacer', hijos: [$$[$0-5], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-7].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column }; 
+ this.$ = { nid: nid++, tipo:'hacer', hijos: [$$[$0-5], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-7].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column }; 
 break;
 case 54:
- this.$ = { tipo:'ciclo_doble_condicion', hijos: [$$[$0-6], $$[$0-4], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-8].first_column, lineaF:  _$[$0-2].last_line, columnaF:  _$[$0-2].last_column } 
+ this.$ = { nid: nid++, tipo:'ciclo_doble_condicion', hijos: [$$[$0-6], $$[$0-4], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-8].first_column, lineaF:  _$[$0-2].last_line, columnaF:  _$[$0-2].last_column } 
 break;
 case 55:
- this.$ = { tipo:'repetir', hijos: [$$[$0-5], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-7].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column }; 
+ this.$ = { nid: nid++, tipo:'repetir', hijos: [$$[$0-5], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-7].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column }; 
 break;
 case 56:
- this.$ = { tipo:'repetir_contando', hijos: [$$[$0-12], $$[$0-8], $$[$0-4], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-16].first_column, lineaF:  _$[$0-10].last_line, columnaF:  _$[$0-10].last_column } 
+ this.$ = { nid: nid++, tipo:'repetir_contando', hijos: [$$[$0-12], $$[$0-8], $$[$0-4], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-16].first_column, lineaF:  _$[$0-10].last_line, columnaF:  _$[$0-10].last_column } 
 break;
 case 57:
- this.$ = { tipo:'repetir_contando', hijos: [$$[$0-11], $$[$0-7], $$[$0-3], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-15].first_column, lineaF:  _$[$0-9].last_line, columnaF:  _$[$0-9].last_column } 
+ this.$ = { nid: nid++, tipo:'repetir_contando', hijos: [$$[$0-11], $$[$0-7], $$[$0-3], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-15].first_column, lineaF:  _$[$0-9].last_line, columnaF:  _$[$0-9].last_column } 
 break;
 case 58:
- this.$ = { tipo:'enciclar', hijos: [$$[$0-3], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-4].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'enciclar', hijos: [$$[$0-3], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-4].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 59:
- this.$ = { tipo:'contador', hijos: [$$[$0-4], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-6].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'contador', hijos: [$$[$0-4], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-6].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 60:
- this.$ = { tipo:'si', hijos: [$$[$0-3], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-5].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'si', hijos: [$$[$0-3], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-5].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 61:
- this.$ = { tipo:'si', hijos: [$$[$0-4], $$[$0-2], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-6].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'si', hijos: [$$[$0-4], $$[$0-2], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-6].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 62:
- this.$ = { tipo:$$[$0-3], hijos: [$$[$0-1]],  linea:  yylineno, columna:  _$[$0-3].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:$$[$0-3], hijos: [$$[$0-1]],  linea:  yylineno, columna:  _$[$0-3].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 65:
- this.$ = { tipo:'evaluar_si', hijos: [$$[$0-4], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-6].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'evaluar_si', hijos: [$$[$0-4], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-6].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 68:
- this.$ = { tipo:'caso', hijos: [$$[$0-2], $$[$0]],  linea:  yylineno, columna:  _$[$0-3].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'caso', hijos: [$$[$0-2], $$[$0]],  linea:  yylineno, columna:  _$[$0-3].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 69:
- this.$ = { tipo:'defecto', hijos: [$$[$0]],   linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'defecto', hijos: [$$[$0]],   linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 70:
- this.$ = { tipo:'estructura', hijos: [$$[$0-3], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-4].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'estructura', hijos: [$$[$0-3], $$[$0-1]],  linea:  yylineno, columna:  _$[$0-4].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 71:
  var arr = $$[$0-2]; this.$ = arr.concat($$[$0-1]); 
@@ -216,112 +216,112 @@ case 74:
  objDec = $$[$0]; objDec.visibilidad = $$[$0-1]; this.$ = objDec; 
 break;
 case 75: case 76:
- this.$ = { tipo:'decl', hijos:[$$[$0-1], $$[$0]],     linea:  yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'decl', hijos:[$$[$0-1], $$[$0]],     linea:  yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 77: case 78:
- this.$ = { tipo:'decl', hijos:[$$[$0-3], $$[$0-2], $$[$0]],     linea:  yylineno, columna:  _$[$0-3].first_column, lineaF:  _$[$0-2].last_line, columnaF:  _$[$0-2].last_column } 
+ this.$ = { nid: nid++, tipo:'decl', hijos:[$$[$0-3], $$[$0-2], $$[$0]],     linea:  yylineno, columna:  _$[$0-3].first_column, lineaF:  _$[$0-2].last_line, columnaF:  _$[$0-2].last_column } 
 break;
 case 79:
- this.$ = { tipo:'tipo', val: $$[$0], linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
+ this.$ = { nid: nid++, tipo:'tipo', val: $$[$0], linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
 break;
 case 85:
- this.$ = { tipo:$$[$0-1], hijos:[$$[$0-2], $$[$0]],  linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:$$[$0-1], hijos:[$$[$0-2], $$[$0]],  linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 86: case 87: case 88: case 89: case 90:
  this.$ = yytext 
 break;
 case 94:
- this.$ = { tipo:'array', val:[$$[$0-1]],  linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'array', val:[$$[$0-1]],  linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 97:
- this.$ = { tipo:'+', hijos:[$$[$0-2], $$[$0]],  linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'+', hijos:[$$[$0-2], $$[$0]],  linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 98:
- this.$ = { tipo:'-', hijos:[$$[$0-2], $$[$0]],  linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'-', hijos:[$$[$0-2], $$[$0]],  linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 99:
- this.$ = { tipo:'*', hijos:[$$[$0-2], $$[$0]],  linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'*', hijos:[$$[$0-2], $$[$0]],  linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 100:
- this.$ = { tipo:'/', hijos:[$$[$0-2], $$[$0]],  linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'/', hijos:[$$[$0-2], $$[$0]],  linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 101:
- this.$ = { tipo:'^', hijos:[$$[$0-2], $$[$0]],  linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'^', hijos:[$$[$0-2], $$[$0]],  linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 102:
- this.$ = { tipo:'==',  hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'==',  hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 103:
- this.$ = { tipo:'!=',  hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'!=',  hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 104:
- this.$ = { tipo:'>',   hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'>',   hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 105:
- this.$ = { tipo:'<',   hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'<',   hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 106:
- this.$ = { tipo:'>=',  hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'>=',  hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 107:
- this.$ = { tipo:'<=',  hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'<=',  hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 108:
- this.$ = { tipo:'||',    hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'||',    hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 109:
- this.$ = { tipo:'??',    hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'??',    hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 110:
- this.$ = { tipo:'&&',    hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'&&',    hijos:[$$[$0-2], $$[$0]], linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 111:
- this.$ = { tipo:'!',     hijos:[$$[$0]],     linea: yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'!',     hijos:[$$[$0]],     linea: yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 112:
- this.$ = { tipo:'nuevo',     hijos:[$$[$0]],     linea: yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'nuevo',     hijos:[$$[$0]],     linea: yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 113:
- this.$ = { tipo:'-',     hijos:[$$[$0]],     linea: yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'-',     hijos:[$$[$0]],     linea: yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 114:
- this.$ = { tipo:'++',    hijos:[$$[$0-1]],  linea: yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'++',    hijos:[$$[$0-1]],  linea: yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 115:
- this.$ = { tipo:'--',    hijos:[$$[$0-1]],  linea: yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'--',    hijos:[$$[$0-1]],  linea: yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 116: case 117:
- this.$ = { tipo:'.',    hijos:[$$[$0-2], $$[$0]],  linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'.',    hijos:[$$[$0-2], $$[$0]],  linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 119:
- this.$ = { tipo:'[]',    hijos:[$$[$0-1], $$[$0]],  linea: yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'[]',    hijos:[$$[$0-1], $$[$0]],  linea: yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 120:
- this.$ = { tipo:'booleanoLit', val: yytext.toLowerCase() == 'verdadero', linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
+ this.$ = { nid: nid++, tipo:'booleanoLit', val: yytext.toLowerCase() == 'verdadero', linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
 break;
 case 121:
- this.$ = { tipo:'enteroLit'  , val: parseInt(yytext)     , linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
+ this.$ = { nid: nid++, tipo:'enteroLit'  , val: parseInt(yytext)     , linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
 break;
 case 122:
- this.$ = { tipo:'decimalLit' , val: parseFloat(yytext)   , linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
+ this.$ = { nid: nid++, tipo:'decimalLit' , val: parseFloat(yytext)   , linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
 break;
 case 123:
- this.$ = { tipo:'cadenaLit'  , val: yytext               , linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
+ this.$ = { nid: nid++, tipo:'cadenaLit'  , val: yytext               , linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
 break;
 case 124:
- this.$ = { tipo:'caracterLit', val: yytext.charCodeAt(0) , linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
+ this.$ = { nid: nid++, tipo:'caracterLit', val: yytext.charCodeAt(0) , linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
 break;
 case 125:
- this.$ = { tipo:'nada',        val: null                 , linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
+ this.$ = { nid: nid++, tipo:'nada',        val: null                 , linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
 break;
 case 126:
- this.$ = { tipo:'nada',        val: null                 , linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
+ this.$ = { nid: nid++, tipo:'nada',        val: null                 , linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
 break;
 case 131:
- this.$ = { tipo:'errorLex'   , val: yytext               , linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
+ this.$ = { nid: nid++, tipo:'errorLex'   , val: yytext               , linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column  } 
 break;
 case 132:
- this.$ = { tipo:'id', val: yytext.toLowerCase(), linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { nid: nid++, tipo:'id', val: yytext.toLowerCase(), linea:  yylineno, columna:  _$[$0].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 }
 },
@@ -575,6 +575,7 @@ _handle_error:
     return true;
 }};
 
+    var nid = 0;
     function addChildren(node, child){
       node.splice(2,1,child); 
       return node;
