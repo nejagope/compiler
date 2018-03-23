@@ -5,7 +5,8 @@ var codigo = fs.readFileSync("test.src", "utf8");
 exec(codigo);
 
 function exec (input) {
-    console.log( JSON.stringify(parser.parse(input)) );
+    var res = parser.parse(input);
+    console.log( JSON.stringify() );
 }
 
 function showJSON(json){

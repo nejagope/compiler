@@ -34,23 +34,28 @@ SENTS
     | SENT        {{ $$ =  [$1] }}     
 ;
 
-SENT 
-    : ASIGNACION ptoComa {{ $$ = $1 }}
-    | CLASE {{ $$ = $1 }}
-    | DECLARACION ptoComa {{ $$ = $1 }}
-    | ESTRUCTURA ptoComa {{ $$ = $1 }}
+SENT     
+    //bloques
+    : CLASE {{ $$ = $1 }}    
+    | FUNCION  {{ $$ = $1 }} 
     | EVALUAR_SI {{ $$ = $1 }}
     | SI {{ $$ = $1 }}
-    | REPETIR_MIENTRAS {{ $$ = $1 }}
-    | HACER ptoComa {{ $$ = $1 }}
-    | CICLO_DOBLE_CONDICION {{ $$ = $1 }}
-    | REPETIR ptoComa {{ $$ = $1 }}
+    | REPETIR_MIENTRAS {{ $$ = $1 }}    
+    | CICLO_DOBLE_CONDICION {{ $$ = $1 }}    
     | REPETIR_CONTANDO {{ $$ = $1 }}
     | ENCICLAR {{ $$ = $1 }}
     | CONTADOR {{ $$ = $1 }}    
-    | FUNCION  {{ $$ = $1 }} 
-    | LLAMADA ptoComa {{ $$ = $1 }}
+    
+    //sentencias-bloque terminadas en ptoComa
+    | HACER ptoComa {{ $$ = $1 }}
+    | REPETIR ptoComa {{ $$ = $1 }}
+
+    //sentencias "sencillas" terminadas en ptoComa
+    | DECLARACION ptoComa {{ $$ = $1 }}
+    | ASIGNACION ptoComa {{ $$ = $1 }}    
     | CREAR_PUNTERO ptoComa {{ $$ = $1 }}       
+    | ESTRUCTURA ptoComa {{ $$ = $1 }}
+    | LLAMADA ptoComa {{ $$ = $1 }}    
     | E pto LLAMADA ptoComa  {{ $$ = { nid: nid++, tipo:'.',    hijos:[$1, $3],  linea: yylineno, columna:  @1.first_column, lineaF:  @3.last_line, columnaF:  @3.last_column } }}         
     | retornar E ptoComa {{ $$ = { nid: nid++, tipo:'retornar', hijos:[$2], linea:  yylineno, columna:  @1.first_column, lineaF:  @1.last_line, columnaF:  @1.last_column  } }}       
     | romper ptoComa {{ $$ = { nid: nid++, tipo:'romper', val: yytext, linea:  yylineno, columna:  @1.first_column, lineaF:  @1.last_line, columnaF:  @1.last_column  } }}       
