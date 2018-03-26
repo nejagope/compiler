@@ -77,6 +77,19 @@ function llenarTablaSimbolos(ast){
 			if (nodoSents != -1){
 				simbolo.ambitoContenido = nodoSents.ambito;
 			}
+
+			var nodoParams = getHijo(ast, 'params');			
+			if (nodoParams != -1){
+				nodoParams.hijos.forEach (function(param){		
+					var simParam = {			
+						tipo: 'param',
+						ambito: simbolo.ambitoContenido,					
+						id : param.hijos[1].val,
+						tipoDato: param.hijos[0].val
+					};							
+					ts = ts.concat(simParam);
+				});	
+			}
 		}
 	
 		ts = ts.concat(simbolo);

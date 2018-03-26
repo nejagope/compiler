@@ -113,9 +113,10 @@ FUNC
 ;
 
 PARAMS 
-    : PARAMS coma PARAM {{ var arr = $1; $$ = arr.concat($3); }}
-    | PARAM             {{ $$ =  [$1] }}    
+    : PARAMS coma PARAM {{ var arr = $1.hijos; $1.hijos = arr.concat($3);  $$ = $1;  }}    
+    | PARAM             {{  $$ = { tipo: 'params', hijos: [$1] } }}
 ;
+
 
 PARAM
   : TIPO ID {{ $$ = { tipo:'param', hijos: [$1, $2],  linea:  yylineno, columna:  @1.first_column, lineaF:  @2.last_line, columnaF:  @2.last_column } }}

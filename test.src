@@ -5,11 +5,14 @@ clase miclase{
 
   privado Entero x;
 
-  protegido Persona suma() {
+  protegido Persona suma(Caracter x, Persona per) {
       entero a;
       entero b;
       retornar suma();
       retornar suma(a,b);
+      repetir_mientras (a<3){
+      	booleano bool = falso;
+      }
   }
 
 

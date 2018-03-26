@@ -155,11 +155,11 @@ break;
 case 45:
  this.$ = { tipo:'funcion', hijos: [$$[$0-5], $$[$0-1]],  linea: yylineno, columna:  _$[$0-5].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
-case 46: case 95:
- var arr = $$[$0-2]; this.$ = arr.concat($$[$0]); 
+case 46:
+ var arr = $$[$0-2].hijos; $$[$0-2].hijos = arr.concat($$[$0]);  this.$ = $$[$0-2];  
 break;
-case 47: case 67: case 92: case 96:
- this.$ =  [$$[$0]] 
+case 47:
+  this.$ = { tipo: 'params', hijos: [$$[$0]] } 
 break;
 case 48: case 49:
  this.$ = { tipo:'param', hijos: [$$[$0-1], $$[$0]],  linea:  yylineno, columna:  _$[$0-1].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
@@ -209,6 +209,9 @@ break;
 case 66: case 91:
  var arr = $$[$0-1]; this.$ = arr.concat($$[$0]); 
 break;
+case 67: case 92: case 96:
+ this.$ =  [$$[$0]] 
+break;
 case 68:
  this.$ = { tipo:'caso', hijos: [$$[$0-2], $$[$0]],  linea:  yylineno, columna:  _$[$0-3].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
@@ -244,6 +247,9 @@ case 86: case 87: case 88: case 89: case 90:
 break;
 case 94:
  this.$ = { tipo:'array', val:[$$[$0-1]],  linea: yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+break;
+case 95:
+ var arr = $$[$0-2]; this.$ = arr.concat($$[$0]); 
 break;
 case 97:
  this.$ = { tipo:'+', hijos:[$$[$0-2], $$[$0]],  linea:  yylineno, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
