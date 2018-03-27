@@ -1,8 +1,9 @@
 var parser = require("./parser").parser;
 var fs = require("fs");
 
-var ts = [];
 var codigo = fs.readFileSync("test.src", "utf8");
+const AMBITO_GLOBAL = [0, 1000000];
+var ts = [];
 var ast = getAST(codigo);
 asinarIDs(ast, 0);
 console.log(jsonToString(ast));
@@ -10,16 +11,22 @@ asignarAmbitos(ast);
 llenarTablaSimbolos(ast);
 mostrarTablaSimbolos();
 
+var sp = 0;	//stackpointer
+var st = 0;
+var l = 0;
+var t = 0;
+var c4d = '';
+var c4ds = [];
+
+generarCuadruplos(ast);
+mostrarC4Ds();
+
 function mostrarTablaSimbolos(){
 	console.log('\n-------------------------- TABLA DE SÍMBOLOS -------------------------');
 	ts.forEach (function(simbolo, i){		
-		console.log((i+1) + '-' + jsonToString(simbolo));
+		console.log((i+1) + '-' + jsonToString(simbolo) + '\n');
 	});
 	console.log('\n------------------------- FIN TABLA DE SÍMBOLOS ----------------------');
-}
-
-function cl(msj){
-	console.log('\n' + msj);
 }
 
 function exec (input) {
@@ -42,88 +49,165 @@ function getAST(codigoFuente){
 }
 
 function llenarTablaSimbolos(ast){
+	if (!ast)
+		return;
+
 	if (!ast.hijos)
 		return false;
 
-	if (ast.tipo == 'decl' || ast.tipo == 'funcion'	|| ast.tipo == 'clase')
-	{
-		var simbolo = {			
-			tipo: ast.tipo == 'decl'? 'var': ast.tipo,
-			ambito: ast.ambito,					
-		};
+	if (ast.tipo == 'prog'){
+				
+		ast.hijos[0].hijos.forEach(function(nodo){ //se examinan las sentencias del programa
+			if (nodo.tipo == 'clase' || nodo.tipo == 'estructura')
+			{
+				var simbolo = {			
+					tipo: nodo.tipo == 'decl'? 'var': nodo.tipo,
+					ambito: AMBITO_GLOBAL,								
+					id: nodo.hijos[0].val
+				};
 
-		if (ast.tipo == 'decl' || ast.tipo == 'funcion'){
-			simbolo.id = ast.hijos[1].val;
-
-			if(ast.tipoDato)
-				simbolo.tipoDato = ast.tipoDato;
-			
-		}
-		else if (ast.tipo == 'clase'){
-			simbolo.id = ast.hijos[0].val;
-		}
-
-		if (ast.tipo == 'funcion'	|| ast.tipo == 'clase')
+				var nodoSents = getHijo(nodo, 'sents');			
+				if (nodoSents != -1){
+					simbolo.ambitoContenido = nodoSents.ambito;
+				}
+				simbolo.tamanio = 0;
+				
+				agregarTS(simbolo);				
+				llenarTablaSimbolos(nodo.hijos[1]);	//se examinan las sentencias de la clase o estructura
+			}//if (nodo.tipo == 'clase' || nodo.tipo == 'estructura')			
+		});		
+		
+	} //if (ast.tipo == 'prog')
+	else{
+		if (ast.tipo == 'decl' || ast.tipo == 'funcion' || ast.tipo == 'estructura')
 		{
-			var nodoSents = getHijo(ast, 'sents');			
-			if (nodoSents != -1){
-				simbolo.ambitoContenido = nodoSents.ambito;
+			var postAddSim = [];
+
+			var simbolo = {			
+				tipo: ast.tipo == 'decl'? 'var': ast.tipo,
+				ambito: ast.ambito,								
+			};
+
+			if (ast.tipo == 'decl' || ast.tipo == 'funcion'){
+				simbolo.id = ast.hijos[1].val;
+
+				if(ast.tipoDato)
+					simbolo.tipoDato = ast.tipoDato;
+				
 			}
-		}
-
-		if (ast.tipo == 'funcion')
-		{
-			var nodoSents = getHijo(ast, 'sents');			
-			if (nodoSents != -1){
-				simbolo.ambitoContenido = nodoSents.ambito;
+			else if (ast.tipo == 'clase' || ast.tipo == 'estructura'){
+				simbolo.id = ast.hijos[0].val;
 			}
 
-			var nodoParams = getHijo(ast, 'params');			
-			if (nodoParams != -1){
-				nodoParams.hijos.forEach (function(param){		
-					var simParam = {			
-						tipo: 'param',
-						ambito: simbolo.ambitoContenido,					
-						id : param.hijos[1].val,
-						tipoDato: param.hijos[0].val
-					};							
-					ts = ts.concat(simParam);
-				});	
+			if (ast.tipo == 'funcion'	|| ast.tipo == 'clase' || ast.tipo == 'estructura')
+			{
+				var astSents = getHijo(ast, 'sents');			
+				if (astSents != -1){
+					simbolo.ambitoContenido = astSents.ambito;
+				}
+				simbolo.tamanio = 0;
 			}
-		}
-	
-		ts = ts.concat(simbolo);
 
-	}
+			if (ast.tipo == 'funcion')
+			{
+				simbolo.nodo = ast;
+				var astSents = getHijo(ast, 'sents');			
+				if (astSents != -1){
+					simbolo.ambitoContenido = astSents.ambito;
+				}
 
-	ast.hijos.forEach (function(hijo){		
-		llenarTablaSimbolos(hijo);
-	});	
+				var astParams = getHijo(ast, 'params');			
+				if (astParams != -1){
+					astParams.hijos.forEach (function(param){		
+						var simParam = {			
+							tipo: 'param',
+							ambito: simbolo.ambitoContenido,					
+							id : param.hijos[1].val,
+							tipoDato: param.hijos[0].val
+						};	
+						postAddSim = postAddSim.concat(simParam);											
+					});	
+				}
+			}
+
+			agregarTS(simbolo);
+			postAddSim.forEach(function(postSim){
+				agregarTS(postSim);
+			});
+		}//if (ast.tipo == 'decl' || ast.tipo == 'funcion'	|| ast.tipo == 'clase' || ast.tipo == 'estructura')
+
+		ast.hijos.forEach (function(hijo){
+			llenarTablaSimbolos(hijo);	
+		});	
+
+	} //if (ast.tipo = 'prog')... else 	
 }
 
-function asignarAmbitos(ast){
+
+function agregarTS(simbolo){
+	if (simbolo.tipo == 'var' || simbolo.tipo == 'param'){
+		var ambito = simbolo.ambito;	
+		//se asigna la posición del símbolo dentro del bloque
+		var posicion = 0;
+		ts.forEach (function(sim){
+			if (ambito == sim.ambito){
+				posicion++;
+			}
+
+			if (ambito == sim.ambitoContenido){
+				sim.tamanio ++;
+			}
+		});
+		
+		
+		simbolo.posicion = posicion;
+	}
+	
+	ts = ts.concat(simbolo);
+}
+
+function getSimbolo(id, tipo, nodo = false){
+	var simbolo = -1;
+	ts.forEach(function(sim){
+		if (sim.id == id && sim.tipo == tipo){
+			if (sim.ambito[0] >= nodo.nid && sim.ambito[1] <= nodo.nid)
+				simbolo = sim;
+			else
+				simbolo = sim;
+			return false;
+		}
+	});
+	return simbolo;
+}
+
+function asignarAmbitos(ast){	
 	if (!ast.hijos)
 		return false;
 
 	ast.hijos.forEach (function(nodo, i){
-		if (nodo.tipo == 'decl' || nodo.tipo == 'funcion' || nodo.tipo == 'clase')
+		if (!nodo)
+			return false;
+		if (nodo.tipo == 'decl' || nodo.tipo == 'funcion' || nodo.tipo == 'clase' || nodo.tipo == 'estructura')
 		{
 			nodo.ambito = ast.ambito;
 		}
+		console.log('\n-----------------------------------------------------------------------------');
 		console.log(i + " -> " + jsonToString(nodo));
 		console.log('\n-----------------------------------------------------------------------------');
 		asignarAmbitos(nodo);
 	});
 }
 
-function asinarIDs(ast, id){
+/**Asigna ids enteros a los nodos del ast iniciando con @id*/
+function asinarIDs(ast, id){	
 	ast.nid = id + 1;
 
 	var limSupAmbito = ast.nid;
 
 	if (ast.hijos){		
 		ast.hijos.forEach (function(hijo){
-			limSupAmbito = asinarIDs(hijo, limSupAmbito);
+			if (hijo)
+				limSupAmbito = asinarIDs(hijo, limSupAmbito);
 		});
 	}	
 	ast.ambito = [ast.nid, limSupAmbito];
@@ -131,14 +215,154 @@ function asinarIDs(ast, id){
 }
 
 
+/** Obtiene el primer hijo del @tipo de un árbol ast*/
 function getHijo(ast, tipo){
 	var nodo = -1;
-	ast.hijos.forEach (function(hijo){
-		if (hijo.tipo == tipo){			
+	ast.hijos.forEach (function(hijo){		
+		if (hijo && hijo.tipo == tipo){			
 			nodo = hijo;
 			return -1; 
 		}
 
 	});
 	return nodo;
+}
+
+function generarCuadruplos(ast){
+	c4d = ''; //código de 4 direcciones
+	l = 0; //indice etiquetas
+	t  = 0; //indice temporales
+	sp = 0; //stack pointer
+	st = 0; //stack top
+	c4ds = []; //líneas de c4d asociadas a una linea de código fuente
+	var main = getSimbolo('principal', 'funcion');	
+	if (main != -1){
+		st += main.tamanio;		
+		var nodoSents = getHijo(main.nodo,'sents');		
+		cuadruplos(nodoSents);		
+	}			
+}
+
+function mostrarC4Ds(){
+	c4ds.forEach(function(c4d){
+		console.log(jsonToString(c4d));
+	});
+}
+
+function cuadruplos(ast){	
+	switch(ast.tipo){
+		case 'sents':		
+			//c4d = 'L' + (++l) + ':';
+			//c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});
+			for (var i = 0; i < ast.hijos.length; i++) {
+				cuadruplos(ast.hijos[i]);
+			}
+			break;
+
+		case 'decl':
+			if (ast.hijos.length < 3){ //declaración sin asignación
+				break;
+			}			
+		case '=':
+			var asignando = ast.hijos[0];
+			if (ast.tipo == 'decl')
+				asignando = ast.hijos[1];
+			
+			var asignante = ast.hijos[1];
+			if (ast.tipo == 'decl')
+				asignante = ast.hijos[2];
+
+			if (asignando.tipo == 'id'){
+				var sim = getSimbolo(asignando.val, 'param', ast);
+				if (sim == -1){
+					sim = getSimbolo(asignando.val, 'var', ast);
+				}
+				if (sim != -1){					
+					var pos = sim.posicion;										
+					var tAsignante = cuadruplos(asignante);
+
+					c4d = '+' + ',' + (sp) + ',' + (pos) + ',' + 't'+(++t);
+					c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});
+					c4d = '<=' + ',' + ('t'+ t) + ',' + 't'+(tAsignante) + ',' + 'stack';
+					c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});					
+					return tAsignante+1;
+				}
+			}
+			return t;
+
+		case 'si':
+			let etV = 'L' + (cuadruplos(ast.hijos[0])) + ':';
+			let etF = 'L' + (++l) + ':';
+
+			var nodoV = getHijo(ast, 'es_verdadero');					
+			var nodoF = getHijo(ast, 'es_falso');			
+
+			c4ds = c4ds.concat({c4d: 'jmp,,,' + etF , linea: ast.hijos[0].linea});			
+			c4ds = c4ds.concat({c4d: etV , linea: ast.hijos[0].linea});
+			if (nodoV != -1){
+				cuadruplos(nodoV.hijos[0]);
+			}			
+			c4ds = c4ds.concat({c4d: etF , linea: ast.hijos[0].linea});
+			if (nodoF != -1){
+				cuadruplos(nodoF.hijos[0]);
+			}
+
+			return;
+
+		case '+':
+		case '-':
+		case '*':
+		case '/':		
+			 c4d = ast.tipo + ',' + ('t'+ cuadruplos(ast.hijos[0])) + ',' + ('t'+ cuadruplos(ast.hijos[1])) + ',' + ('t'+ (++t));
+			 c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});
+			 return t;
+		
+		case '==':			
+			c4d = 'je' + ',' + ('t'+ cuadruplos(ast.hijos[0])) + ',' + ('t'+ cuadruplos(ast.hijos[1])) + ',' + ('L'+ (++l));
+			c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});
+			return l;
+		case '!=':	
+			c4d = 'jne' + ',' + ('t'+ cuadruplos(ast.hijos[0])) + ',' + ('t'+ cuadruplos(ast.hijos[1])) + ',' + ('L'+ (++l));
+			c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});
+			return l;	
+		case '>=':
+			c4d = 'jge' + ',' + ('t'+ cuadruplos(ast.hijos[0])) + ',' + ('t'+ cuadruplos(ast.hijos[1])) + ',' + ('L'+ (++l));
+			c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});
+			return l;
+		case '<=':
+			c4d = 'jle' + ',' + ('t'+ cuadruplos(ast.hijos[0])) + ',' + ('t'+ cuadruplos(ast.hijos[1])) + ',' + ('L'+ (++l));
+			c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});
+			return l;
+		case '>':
+			c4d = 'jg' + ',' + ('t'+ cuadruplos(ast.hijos[0])) + ',' + ('t'+ cuadruplos(ast.hijos[1])) + ',' + ('L'+ (++l));
+			c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});
+			return l;
+		case '<':		
+			 c4d = 'jl' + ',' + ('t'+ cuadruplos(ast.hijos[0])) + ',' + ('t'+ cuadruplos(ast.hijos[1])) + ',' + ('L'+ (++l));
+			 c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});
+			 return l;
+
+		case 'id':
+			var sim = getSimbolo(ast.val, 'param', ast);
+			if (sim == -1){
+				var sim = getSimbolo(ast.val, 'var', ast);
+			}
+			if (sim != -1){					
+				var pos = sim.posicion;														
+				c4d = '+' + ',' + (sp) + ',' + (pos) + ',' + 't'+(++t);
+				c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});
+				c4d = '=>' + ',' + ('t'+ t) + ',' + 't'+(++t) + ',' + 'stack';
+				c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});					
+				return t;
+			}
+		case 'enteroLit':
+			c4d = '=' + ',' + (ast.val) + ',' + '' + ',' + ('t'+(++t));	
+			c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});			
+			return t;
+
+		case 'booleanoLit':
+			c4d = '=' + ',' + (ast.val ? 1:0) + ',' + '' + ',' + ('t'+(++t));	
+			c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});			
+			return t;
+	}
 }

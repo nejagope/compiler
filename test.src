@@ -1,20 +1,16 @@
-﻿/*comentario 
-inicial*/
-
-clase miclase{
-
-  privado Entero x;
-
-  protegido Persona suma(Caracter x, Persona per) {
-      entero a;
-      entero b;
-      retornar suma();
-      retornar suma(a,b);
-      repetir_mientras (a<3){
-      	booleano bool = falso;
-      }
-  }
-
-
-
+﻿/** Clase principal */
+clase Principal{	
+	
+	principal () { //rutina de inicio
+		caracter b;
+		entero a;
+		si (a >= 2)
+			es_verdadero{
+				b = 6;
+			}
+			es_falso{
+				b = 5;
+			}
+		fin-si		
+	}
 }
