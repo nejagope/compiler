@@ -249,13 +249,13 @@ function mostrarC4Ds(){
 	});
 }
 
-function cuadruplos(ast){	
+function cuadruplos(ast, etIni = null, etFin = null, etRet = null){	
 	switch(ast.tipo){
 		case 'sents':		
 			//c4d = 'L' + (++l) + ':';
 			//c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});
 			for (var i = 0; i < ast.hijos.length; i++) {
-				cuadruplos(ast.hijos[i]);
+				cuadruplos(ast.hijos[i], etIni, etFin, etRet);
 			}
 			break;
 
@@ -291,22 +291,68 @@ function cuadruplos(ast){
 			return t;
 
 		case 'si':
-			let etV = 'L' + (cuadruplos(ast.hijos[0])) + ':';
-			let etF = 'L' + (++l) + ':';
+			let etVSi = 'L' + (cuadruplos(ast.hijos[0], etIni, etFin, etRet)) + ':';
+			let etFSi = 'L' + (++l) + ':';
 
-			var nodoV = getHijo(ast, 'es_verdadero');					
-			var nodoF = getHijo(ast, 'es_falso');			
+			var nodoVSi = getHijo(ast, 'es_verdadero');					
+			var nodoFSi = getHijo(ast, 'es_falso');			
 
-			c4ds = c4ds.concat({c4d: 'jmp,,,' + etF , linea: ast.hijos[0].linea});			
-			c4ds = c4ds.concat({c4d: etV , linea: ast.hijos[0].linea});
-			if (nodoV != -1){
-				cuadruplos(nodoV.hijos[0]);
+			c4ds = c4ds.concat({c4d: 'jmp,,,' + etFSi , linea: ast.hijos[0].linea});			
+			c4ds = c4ds.concat({c4d: etVSi , linea: ast.hijos[0].linea});
+			if (nodoVSi != -1){
+				cuadruplos(nodoVSi.hijos[0], etIni, etFin, etRet);
 			}			
-			c4ds = c4ds.concat({c4d: etF , linea: ast.hijos[0].linea});
-			if (nodoF != -1){
-				cuadruplos(nodoF.hijos[0]);
+			c4ds = c4ds.concat({c4d: etFSi , linea: ast.hijos[0].linea});
+			if (nodoFSi != -1){
+				cuadruplos(nodoFSi.hijos[0], etIni, etFin, etRet);
 			}
+			return;
 
+		case 'repetir_mientras':
+			let etIniRM = 'L' + (++l) + ':';
+			c4ds = c4ds.concat({c4d: etIniRM , linea: ast.hijos[0].linea});
+			let etVRM = 'L' + (cuadruplos(ast.hijos[0], etIni, etFin, etRet)) + ':';
+			let etFRM = 'L' + (++l) + ':';
+			c4ds = c4ds.concat({c4d: 'jmp,,,' + etFRM , linea: ast.hijos[0].linea});	
+			c4ds = c4ds.concat({c4d: etVRM , linea: ast.hijos[0].linea});						
+			cuadruplos(ast.hijos[1], etIniRM, etFRM, etRet);
+			c4ds = c4ds.concat({c4d: 'jmp,,,' + etIniRM , linea: ast.hijos[0].linea});	
+			c4ds = c4ds.concat({c4d: etFRM , linea: ast.hijos[0].linea});
+			return;
+
+		case 'hacer':
+			let etVHacer = {c4d: '', linea: ast.hijos[0].linea};
+			c4ds = c4ds.concat(etVHacer);
+			cuadruplos(ast.hijos[0], etIni, etFin, etRet);
+			etVHacer.c4d = 'L' + (cuadruplos(ast.hijos[1], etIni, etFin, etRet)) + ':';												
+			return;
+
+		case 'ciclo_doble_condicion':
+			let etIniCDC = 'L' + (++l) + ':';
+			c4ds = c4ds.concat({c4d: etIniCDC , linea: ast.hijos[0].linea});						
+			let etVCDC1 = 'L' + (cuadruplos(ast.hijos[0], etIni, etFin, etRet)) + ':';			
+			let etFCDC = 'L' + (++l) + ':';
+			c4ds = c4ds.concat({c4d: 'jmp,,,' + etFCDC , linea: ast.hijos[0].linea});
+			c4ds = c4ds.concat({c4d: etVCDC1 , linea: ast.hijos[0].linea});						
+			let etVCDC2 = 'L' + (cuadruplos(ast.hijos[1], etIni, etFin, etRet)) + ':';			
+			c4ds = c4ds.concat({c4d: 'jmp,,,' + etFCDC , linea: ast.hijos[0].linea});
+			c4ds = c4ds.concat({c4d: etVCDC2 , linea: ast.hijos[0].linea});									
+			cuadruplos(ast.hijos[2], etIni, etFin, etRet);
+			c4ds = c4ds.concat({c4d: 'jmp,,,' + etIniCDC , linea: ast.hijos[0].linea});
+			c4ds = c4ds.concat({c4d: etFCDC , linea: ast.hijos[0].linea});
+			return;
+
+		case 'repetir':
+			let etIniRep = 'L' + (++l) + ':';
+			c4ds = c4ds.concat({c4d: etIniRep , linea: ast.hijos[0].linea});
+			cuadruplos(ast.hijos[0], etIni, etFin, etRet);
+			let etFinRep = 'L' + (cuadruplos(ast.hijos[1], etIni, etFin, etRet)) + ':';		
+			c4ds = c4ds.concat({c4d: 'jmp,,,' + etIniRep , linea: ast.hijos[1].linea});										
+			c4ds = c4ds.concat({c4d: etFinRep , linea: ast.hijos[1].linea});										
+			return;
+
+		case 'retornar':
+			
 			return;
 
 		case '+':

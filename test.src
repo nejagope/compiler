@@ -4,13 +4,10 @@ clase Principal{
 	principal () { //rutina de inicio
 		caracter b;
 		entero a;
-		si (a >= 2)
-			es_verdadero{
-				b = 6;
-			}
-			es_falso{
-				b = 5;
-			}
-		fin-si		
+		b = 7;
+		repetir {
+			b = 6;	
+		}hasta_que(a < b);
+		a = 8;
 	}
 }
