@@ -2,12 +2,17 @@
 clase Principal{	
 	
 	principal () { //rutina de inicio
-		caracter b;
+		//caracter b;
 		entero a;
-		b = 7;
-		repetir {
-			b = 6;	
-		}hasta_que(a < b);
-		a = 8;
+		//b = 7;
+		si(1 >= 1 || 2>=5) 
+			es_falso{
+				a=2;
+			}
+			es_verdadero{
+				a = 3;
+			}
+		fin-si
+		//a = 8;
 	}
 }

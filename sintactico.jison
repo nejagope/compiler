@@ -7,12 +7,13 @@
 %}
 %locations
 
-%nonassoc igual mayor menor mayorI menorI diferente
 %nonassoc asigna masI menosI porI entreI
 
 %left o xor
 %left y
 %left no
+
+%left igual mayor menor mayorI menorI diferente
 
 %left mas menos
 %left por entre
