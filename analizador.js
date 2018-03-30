@@ -245,18 +245,24 @@ function generarCuadruplos(ast){
 }
 
 function mostrarC4Ds(){
+	c4ds = c4d.split('|');
 	c4ds.forEach(function(c4d){
-		console.log(jsonToString(c4d));
+		c4d = c4d.split('#');
+		console.log(c4d[0] + ' --------------- linea: ' + c4d[1]);		
 	});
 }
 
 function cuadruplos(ast, etIni = null, etFin = null, etRet = null){	
 	switch(ast.tipo){
 		case 'sents':					
-			for (var i = 0; i < ast.hijos.length; i++) {
-				cuadruplos(ast.hijos[i], etIni, etFin, etRet);
+			let c4dSents = '';
+			for (var i = 0; i < ast.hijos.length; i++) {								
+				let resSent = cuadruplos(ast.hijos[i], etIni, etFin, etRet);
+				if (resSent && resSent.c4d){					
+					c4dSents += resSent.c4d;					
+				}
 			}
-			break;
+			return { c4d: c4dSents };
 
 		case 'decl':
 			if (ast.hijos.length < 3){ //declaración sin asignación
@@ -279,43 +285,36 @@ function cuadruplos(ast, etIni = null, etFin = null, etRet = null){
 				if (sim != -1){					
 					var pos = sim.posicion;										
 					var tAsignante = cuadruplos(asignante);
-
-					c4d = '+' + ',' + (sp) + ',' + (pos) + ',' + 't'+(++t);
-					c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});
-					c4d = '<=' + ',' + ('t'+ t) + ',' + 't'+(tAsignante) + ',' + 'stack';
-					c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});					
-					return;
+					c4d = tAsignante.c4d;
+					c4d += '+' + ',' + (sp) + ',' + (pos) + ',' + 't' + (++t) + '#' + ast.linea + '|';					
+					c4d += '<=' + ',' + ('t'+ t) + ',' + (tAsignante.t) + ',' + 'stack' + '#' + ast.linea + '|';					
+					return { c4d: c4d };
 				}
 			}
-			return;
+			return {};
 
 		case 'si':
-			let etVSi = genEt();//'L' + (cuadruplos(ast.hijos[0], etIni, etFin, etRet)) + ':';
-			let etFSi = genEt();//'L' + (++l) + ':';
-			let etFinSi = genEt();//'L' + (++l) + ':';
+			let condSi = cuadruplos(ast.hijos[0]);
+			c4d = condSi.c4d;			
 
 			var nodoVSi = getHijo(ast, 'es_verdadero');					
-			var nodoFSi = getHijo(ast, 'es_falso');			
+			var nodoFSi = getHijo(ast, 'es_falso');	
 
-			c4d = 'je' + ',' + (cuadruplos(ast.hijos[0])) + ',' + (1) + ',' + (etVSi);
-			pushC4D(c4d, ast.hijos[0].linea);
-
-			pushC4D('jmp,,,' + etFSi, ast.hijos[0].linea);			
-			pushC4D(etVSi + ':', ast.hijos[0].linea);
-			//c4ds = c4ds.concat({c4d: 'jmp,,,' + etFSi , linea: ast.hijos[0].linea});			
-			///c4ds = c4ds.concat({c4d: etVSi , linea: ast.hijos[0].linea});
+			let etFinSi = genEt();		
+			
+			c4d += etsToC4D(condSi.etsV, ast.linea);
 			if (nodoVSi != -1){				
-				cuadruplos(nodoVSi.hijos[0], etIni, etFin, etRet);
-				pushC4D('jmp,,,' + etFinSi, ast.hijos[0].linea);	
+				c4d += cuadruplos(nodoVSi.hijos[0], etIni, etFin, etRet).c4d;				
+				c4d += 'jmp,,,' + etFinSi + "#" + ast.linea + '|';	
 			}			
-			//c4ds = c4ds.concat({c4d: etFSi , linea: ast.hijos[0].linea});
-			pushC4D(etFSi + ':', ast.hijos[0].linea);
+			
+			c4d += etsToC4D(condSi.etsF, ast.linea);
 			if (nodoFSi != -1){
-				cuadruplos(nodoFSi.hijos[0], etIni, etFin, etRet);
-				pushC4D('jmp,,,' + etFinSi, ast.hijos[0].linea);
+				c4d += cuadruplos(nodoFSi.hijos[0], etIni, etFin, etRet).c4d;
+				c4d += 'jmp,,,' + etFinSi + "#" + ast.linea + '|';				
 			}
-			pushC4D(etFinSi + ':', ast.hijos[0].linea);
-			return;
+			c4d += etFinSi + ":#" + ast.linea + '|';
+			return { c4d : c4d };
 
 		case 'repetir_mientras':
 			let etIniRM = genEt();
@@ -414,8 +413,8 @@ function cuadruplos(ast, etIni = null, etFin = null, etRet = null){
 		case '>':			
 		case '<':			
 			let etVComp = genEt();			
-			let etFinComp = genEt();
-			let temResComp = genTemp();
+			let etFComp = genEt();
+			
 			let opComp = 'je';
 			if (ast.tipo == '!=')
 				opComp = 'jne';
@@ -428,27 +427,24 @@ function cuadruplos(ast, etIni = null, etFin = null, etRet = null){
 			else if (ast.tipo == '<')
 				opComp = 'jl';
 
-			c4d = opComp + ',' + (cuadruplos(ast.hijos[0])) + ',' + (cuadruplos(ast.hijos[1])) + ',' + (etVComp);
-			c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});			
-			c4ds = c4ds.concat({c4d: '=' + ',' + (0) + ',' + '' + ',' + (temResComp), linea: ast.linea});		
-			c4ds = c4ds.concat({c4d: 'jmp,,,' + etFinComp , linea: ast.linea});								
-			c4ds = c4ds.concat({c4d: etVComp + ':', linea: ast.linea});			
-			c4ds = c4ds.concat({c4d: '=' + ',' + (1) + ',' + '' + ',' + (temResComp), linea: ast.linea});						
-			c4ds = c4ds.concat({c4d: etFinComp + ':', linea: ast.linea});			
-			return temResComp;
+			let comp1 = cuadruplos(ast.hijos[0]);			
+			let comp2 = cuadruplos(ast.hijos[1]);
 
-		case '||':
-			let etVOr = genEt();			
-			let etFOr = genEt();
-			let tempResOr = genTemp();
-			pushC4D('je' + ',' + (cuadruplos(ast.hijos[0])) + ',' + (1) + ',' + (etVOr) , ast.linea);			
-			pushC4D('je' + ',' + (cuadruplos(ast.hijos[1])) + ',' + (1) + ',' + (etVOr) , ast.linea);
-			pushC4D('=' + ',' + (0) + ',' + '' + ',' + (tempResOr) , ast.linea);			
-			pushC4D('jmp,,,' + etFOr, ast.linea);
-			pushC4D(etVOr + ':', ast.linea);			
-			pushC4D('=' + ',' + (1) + ',' + '' + ',' + (tempResOr) , ast.linea);
-			pushC4D(etFOr + ':', ast.linea);			
-			return tempResOr;
+			c4d = comp1.c4d + comp2.c4d;
+			c4d += opComp + ',' + (comp1.t) + ',' + (comp2.t) + ',' + (etVComp) + '#' + ast.linea + '|';
+			c4d += 	'jmp,,,' + (etFComp) + '#' + ast.linea + '|';
+															
+			return {etsV: [etVComp], etsF: [etFComp], c4d: c4d};
+
+		case '||':			
+			let Or1 = cuadruplos(ast.hijos[0]);
+			let Or2 = cuadruplos(ast.hijos[1]);
+
+			c4d = Or1.c4d;			
+			c4d += etsToC4D(Or1.etsF, ast.linea);
+			c4d += Or2.c4d;
+			
+			return {etsF: [], etsV: Or1.etsV.concat(Or2.etsV), c4d: c4d };
 
 		case 'id':
 			var sim = getSimbolo(ast.val, 'param', ast);
@@ -457,21 +453,17 @@ function cuadruplos(ast, etIni = null, etFin = null, etRet = null){
 			}
 			if (sim != -1){					
 				var pos = sim.posicion;														
-				c4d = '+' + ',' + (sp) + ',' + (pos) + ',' + 't'+(++t);
-				c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});
-				c4d = '=>' + ',' + ('t'+ t) + ',' + 't'+(++t) + ',' + 'stack';
-				c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});					
-				return 't' + t;
+				c4d = '+' + ',' + (sp) + ',' + (pos) + ',' + 't'+(++t)+ '#' + ast.linea + '|';				
+				c4d += '=>' + ',' + ('t'+ t) + ',' + 't'+(++t) + ',' + 'stack'+ '#' + ast.linea + '|';			
+				return {t: 't' + t, c4d: c4d };
 			}
 		case 'enteroLit':
-			c4d = '=' + ',' + (ast.val) + ',' + '' + ',' + ('t'+(++t));	
-			c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});			
-			return 't' + t;
+			c4d = '=' + ',' + (ast.val) + ',' + '' + ',' + ('t'+(++t)) + '#' + ast.linea + '|';								
+			return {t: 't' + t, c4d: c4d };
 
 		case 'booleanoLit':
-			c4d = '=' + ',' + (ast.val ? 1:0) + ',' + '' + ',' + ('t'+(++t));	
-			c4ds = c4ds.concat({c4d: c4d, linea: ast.linea});			
-			return 't' + t;
+			c4d = '=' + ',' + (ast.val) + ',' + '' + ',' + ('t'+(++t)) + '#' + ast.linea + '|';
+			return {t: 't' + t, c4d: c4d };
 	}
 }
 
@@ -489,4 +481,12 @@ function genEt(){
 
 function genTemp(){
 	return 't' + (++t);
+}
+
+function etsToC4D(ets, linea){
+	let etsC4d = '';
+	ets.forEach(function(et){
+		etsC4d += et + ':#' + linea + '|';
+	});
+	return etsC4d;
 }
