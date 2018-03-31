@@ -1,18 +1,30 @@
 ﻿/** Clase principal */
-clase Principal{	
-	
-	principal () { //rutina de inicio
-		//caracter b;
+estructura Persona[
+		cadena nombre;
+		entero edad;
+	];
+
+clase Principal{
+	entero b;
+	principal () { //rutina de inicio		
+		
 		entero a;
-		//b = 7;
-		si(1 >= 1 || 2>=5) 
-			es_falso{
-				a=2;
-			}
-			es_verdadero{
-				a = 3;
-			}
-		fin-si
-		//a = 8;
+		
+		contador(4){
+			a = 1;
+		}
+		
+		enciclar miciclo{
+			a = 1;
+			romper;
+		}
+		repetir_contando(variable : i; desde : 1+5; hasta: 9){
+			a=1;
+		}
+		ciclo_doble_condicion( 2 == 4, 3== 1){
+			entero b;
+			a = 1;			
+		}
+		
 	}
 }
