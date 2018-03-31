@@ -292,9 +292,13 @@ function mostrarC4Ds(c4d){
 		c4d = c4d.split('#');
 		let cantGuiones = 20 - c4d[0].length
 		let linea = c4d[0] + ' ';
-		for (var i = 0; i< cantGuiones; i++)
-			linea += '.';
-		console.log(linea + ' linea: ' + c4d[1]);		
+		if (!c4d[0].startsWith('L') && !c4d[0].startsWith('jmp')){
+			for (var i = 0; i< cantGuiones; i++)
+				linea += '.';
+			console.log(linea + ' linea: ' + c4d[1]);		
+		}else{
+			console.log(c4d[0]);
+		}
 	});
 	console.log('------------------ FIN - CUÁDRUPLOS ----------------')
 }

@@ -9,12 +9,12 @@ clase Principal{
 	principal () { //rutina de inicio		
 		
 		entero a;
-		
+
 		contador(4){
 			a = 1;
 		}
 		
-		enciclar miciclo{
+		enciclar mi_ciclo{
 			a = 1;
 			romper;
 		}
