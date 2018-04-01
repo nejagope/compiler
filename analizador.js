@@ -268,6 +268,19 @@ function getHijo(ast, tipo){
 	return nodo;
 }
 
+
+/** Retorna todos los hijos del @tipo de un árbol ast*/
+function getHijos(ast, tipo){
+	var nodos = [];
+	ast.hijos.forEach (function(hijo){		
+		if (hijo && hijo.tipo == tipo){			
+			nodos = nodos.concat(hijo);			
+		}
+
+	});
+	return nodos;
+}
+
 function generarCuadruplos(ast){
 	c4d = ''; //código de 4 direcciones
 	l = 0; //indice etiquetas
@@ -378,6 +391,47 @@ function cuadruplos(ast, etIni = null, etFin = null, etRet = null){
 			c4d += etFinSi + ":#" + ast.linea + '|';
 			return { c4d : c4d };
 
+		case 'evaluar_si':
+			let c4dEv = '';
+			let resCompEv1 = cuadruplos(ast.hijos[0]);
+			c4dEv = resCompEv1.c4d;
+
+			let etFinEv = genEt();			
+			let nodosCaso = getHijos(ast.hijos[1], 'caso');
+			
+			//guardará las etiquetas de inicio del grupo de sentencias de cada caso
+			let etsSentCasos = [];
+			nodosCaso.forEach(function(nodoCaso){
+				//se crea la etique de inicio de las sentencias del caso y se agrega al resto
+				etsSentCasos.push(genEt());
+			});
+
+			//comparaciones que encenderán o apagarán el "switch"
+			nodosCaso.forEach(function(nodoCaso, j){	
+				if (nodoCaso.hijos.length == 1){ //defecto
+					c4dEv += 'jmp,,,' + etsSentCasos[j] + "#" + ' ' + '|';	
+				}else{
+					let resCompEv2 = cuadruplos(nodoCaso.hijos[0]); //expresión del caso
+					c4dEv += resCompEv2.c4d;
+					//se decide si se salta al grupo de sentencias del caso
+					c4dEv += 'je' + ',' + (resCompEv1.t) + ',' + (resCompEv2.t) + ',' + (etsSentCasos[j]) + '#' + nodoCaso.hijos[0].linea + '|';
+				}				
+			});
+			//se salta al fin de la sentencia de control (exactamente después de las sentencias de los casos)
+			c4dEv += 'jmp,,,' + etFinEv + "#" + ' ' + '|';	
+			
+			//bloques de sentencias
+			nodosCaso.forEach(function(nodoCaso, j){
+				//etiqueta del bloque de sentencias del caso
+				c4dEv += etsSentCasos[j] + ':' + '#' + ' ' + '|';													
+				//sentencias del caso
+				c4dEv += cuadruplos(getHijo(nodoCaso, 'sents'), etIni, etFinEv, etRet).c4d;				
+			});
+			//salida de la estructura de control
+			c4dEv += etFinEv + ':' + '#' + ' ' + '|';					
+
+			return { c4d : c4dEv };
+
 		case 'contador':
 			let etIniCon = genEt();
 			let etFinCon = genEt();
@@ -391,7 +445,7 @@ function cuadruplos(ast, etIni = null, etFin = null, etRet = null){
 			//inicio del ciclo
 			c4d += etIniCon + ':' + '#' + ast.hijos[0].linea + '|';	
 			//comparar el contador al límite
-			c4d += 'jge' + ',' + (tContCon) + ',' + (resLimCon.t) + ',' + (etFinCon) + '#' + ast.hijos[0].linea + '|';
+			
 			//sentencias			
 			c4d += resSentsCon.c4d;
 			//incrementar el contador

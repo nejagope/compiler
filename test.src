@@ -10,6 +10,16 @@ clase Principal{
 		
 		entero a;
 
+		evaluar_si(a){
+			es_igual_a(1):				
+				a = 3;
+				romper;
+			es_igual_a(2):
+				a = 3;
+			defecto:
+				a = 5;
+		}
+
 		contador(4){
 			a = 1;
 		}

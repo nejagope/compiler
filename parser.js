@@ -206,17 +206,17 @@ break;
 case 65:
  this.$ = { tipo:'evaluar_si', hijos: [$$[$0-4], $$[$0-1]],  linea:  yylineno+1, columna:  _$[$0-6].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
-case 66: case 89:
- var arr = $$[$0-1]; this.$ = arr.concat($$[$0]); 
+case 66:
+ var arr = $$[$0-1].hijos; $$[$0-1].hijos = arr.concat($$[$0]);  this.$ = $$[$0-1];  
 break;
-case 67: case 90: case 94:
- this.$ =  [$$[$0]] 
+case 67:
+  this.$ = { tipo: 'casos', hijos: [$$[$0]] } 
 break;
 case 68:
  this.$ = { tipo:'caso', hijos: [$$[$0-2], $$[$0]],  linea:  yylineno+1, columna:  _$[$0-3].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 69:
- this.$ = { tipo:'defecto', hijos: [$$[$0]],   linea:  yylineno+1, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
+ this.$ = { tipo:'caso', hijos: [$$[$0]],   linea:  yylineno+1, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
 case 70:
  this.$ = { tipo:'estructura', hijos: [$$[$0-3], $$[$0-1]],  linea:  yylineno+1, columna:  _$[$0-4].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
@@ -238,6 +238,12 @@ case 83:
 break;
 case 84: case 85: case 86: case 87: case 88:
  this.$ = yytext 
+break;
+case 89:
+ var arr = $$[$0-1]; this.$ = arr.concat($$[$0]); 
+break;
+case 90: case 94:
+ this.$ =  [$$[$0]] 
 break;
 case 92:
  this.$ = { tipo:'array', val:[$$[$0-1]],  linea: yylineno+1, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 

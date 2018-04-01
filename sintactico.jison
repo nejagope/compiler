@@ -193,14 +193,14 @@ EVALUAR_SI
 ;
 
 CASOS
-    : CASOS CASO   {{ var arr = $1; $$ = arr.concat($2); }}
-    | CASO         {{ $$ =  [$1] }}   
+    : CASOS CASO   {{ var arr = $1.hijos; $1.hijos = arr.concat($2);  $$ = $1;  }}    
+    | CASO         {{  $$ = { tipo: 'casos', hijos: [$1] } }}
 ;
 
 
 CASO 
     : es_igual_a E dosPtos SENTS    {{ $$ = { tipo:'caso', hijos: [$2, $4],  linea:  yylineno+1, columna:  @1.first_column, lineaF:  @4.last_line, columnaF:  @4.last_column } }}        
-    | defecto dosPtos SENTS         {{ $$ = { tipo:'defecto', hijos: [$3],   linea:  yylineno+1, columna:  @1.first_column, lineaF:  @3.last_line, columnaF:  @3.last_column } }}        
+    | defecto dosPtos SENTS         {{ $$ = { tipo:'caso', hijos: [$3],   linea:  yylineno+1, columna:  @1.first_column, lineaF:  @3.last_line, columnaF:  @3.last_column } }}        
 ;
 
 ESTRUCTURA
