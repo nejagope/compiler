@@ -1,40 +1,29 @@
 ﻿/** Clase principal */
-estructura Persona[
-		cadena nombre;
-		entero edad;
-	];
 
 clase Principal{
-	entero b;
+	
 	principal () { //rutina de inicio		
-		
-		entero a;
+		entero a = 2;			
+	}
 
-		evaluar_si(a){
-			es_igual_a(1):				
-				a = 3;
-				romper;
-			es_igual_a(2):
-				a = 3;
-			defecto:
-				a = 5;
-		}
+	entero recursivo(entero x){
+		si (x == 0)
+			es_verdadero{
+				retornar 1;
+			}
+		fin-si
+		entero res = recursivo(x-1);
+		retornar res;
+	}
 
-		contador(4){
-			a = 1;
-		}
-		
-		enciclar mi_ciclo{
-			a = 1;
-			romper;
-		}
-		repetir_contando(variable : i; desde : 1+5; hasta: 9){
-			a=1;
-		}
-		ciclo_doble_condicion( 2 == 4, 3== 1){
-			entero b;
-			a = 1;			
-		}
-		
+	decimal suma(decimal a, decimal b){
+		decimal res = a + b;
+		multiplicacion(1,2);
+		retornar res;		
+	}
+
+	entero multiplicacion(entero n1, entero n2){
+		entero res = n1 * n2;
+		retornar res;
 	}
 }

@@ -155,7 +155,7 @@ break;
 case 45:
  this.$ = { tipo:'funcion', hijos: [null, $$[$0-5], $$[$0-1]],  linea: yylineno+1, columna:  _$[$0-5].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
-case 46:
+case 46: case 93:
  var arr = $$[$0-2].hijos; $$[$0-2].hijos = arr.concat($$[$0]);  this.$ = $$[$0-2];  
 break;
 case 47:
@@ -242,14 +242,14 @@ break;
 case 89:
  var arr = $$[$0-1]; this.$ = arr.concat($$[$0]); 
 break;
-case 90: case 94:
+case 90:
  this.$ =  [$$[$0]] 
 break;
 case 92:
  this.$ = { tipo:'array', val:[$$[$0-1]],  linea: yylineno+1, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 
 break;
-case 93:
- var arr = $$[$0-2]; this.$ = arr.concat($$[$0]); 
+case 94:
+  this.$ = { tipo: 'exps', hijos: [$$[$0]] } 
 break;
 case 95:
  this.$ = { tipo:'+', hijos:[$$[$0-2], $$[$0]],  linea:  yylineno+1, columna:  _$[$0-2].first_column, lineaF:  _$[$0].last_line, columnaF:  _$[$0].last_column } 

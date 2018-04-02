@@ -18,10 +18,9 @@ var ht = 0;
 var l = 0;
 var t = 0;
 var c4d = '';
-var c4ds = [];
 
 var resCuadruplosProg = generarCuadruplos(ast);
-mostrarC4Ds(resCuadruplosProg.c4d);
+mostrarC4Ds(resCuadruplosProg);
 
 function mostrarTablaSimbolos(){
 	console.log('\n-------------------------- TABLA DE SÍMBOLOS -------------------------');
@@ -106,6 +105,9 @@ function llenarTablaSimbolos(ast){
 
 				if(ast.tipoDato)
 					simbolo.tipoDato = ast.tipoDato;
+				else
+					if (simbolo.id == 'principal' && simbolo.tipo == 'funcion')
+						simbolo.tipoDato = 'vacio';
 				
 			}
 			else if (ast.tipo == 'clase' || ast.tipo == 'estructura'){
@@ -124,14 +126,29 @@ function llenarTablaSimbolos(ast){
 			if (ast.tipo == 'funcion')
 			{
 				simbolo.tamanio = 1; //retorno
-				simbolo.nodo = ast;
+				//simbolo.nodo = ast;
 				var astSents = getHijo(ast, 'sents');			
 				if (astSents != -1){
 					simbolo.ambitoContenido = astSents.ambito;
+
+					//buscar la clase a la que pertenece la función
+					ts.forEach(function(sim){
+						if (sim.tipo == 'clase' && sim.ambitoContenido == simbolo.ambito){
+							simbolo.clase = sim.id;
+
+							//asignar el tipo de dato de retorno de la clase si la función es un constructor
+							if (!simbolo.tipoDato)
+								simbolo.tipoDato = simbolo.id == sim.id ? sim.id : simbolo.id;
+							return false;
+						}
+					});
+						
 				}
 
+				simbolo.params = ''; //servirá para diferenciar funciones con el mismo nombre pero con diferente tipo de params
+
 				var astParams = getHijo(ast, 'params');			
-				if (astParams != -1){
+				if (astParams != -1){					
 					astParams.hijos.forEach (function(param){		
 						var simParam = {			
 							tipo: 'param',
@@ -140,6 +157,7 @@ function llenarTablaSimbolos(ast){
 							tipoDato: param.hijos[0].val
 						};	
 						postAddSim = postAddSim.concat(simParam);											
+						simbolo.params += simParam.tipoDato + '%';						
 					});	
 				}
 			}
@@ -206,6 +224,55 @@ function agregarTS(simbolo){
 	ts = ts.concat(simbolo);
 }
 
+function getVar(id, nodo){
+	var simbolo = -1;
+	//intenta hallar primero un parámetro y luego una variable
+	ts.forEach(function(sim){
+		if (sim.id == id && sim.tipo == 'param'){
+			if (sim.ambito[0] <= nodo.nid && sim.ambito[1] >= nodo.nid){
+				simbolo = sim;			
+			}
+		}
+	});
+	if (simbolo == -1){
+		ts.forEach(function(sim){
+			if (sim.id == id && sim.tipo == 'var'){
+				if (sim.ambito[0] <= nodo.nid && sim.ambito[1] >= nodo.nid){
+					simbolo = sim;	
+					return false;		
+				}
+			}
+		});
+	}	
+	return simbolo;
+}
+
+function getFuncion(id, nodo){
+	var simbolo = -1;
+	ts.forEach(function(sim){
+		if (sim.id == id && sim.tipo == 'funcion'){
+			if (sim.ambito[0] <= nodo.nid && sim.ambito[1] >= nodo.nid){
+				simbolo = sim;	
+				return false;		
+			}
+		}
+	});
+	return simbolo;
+}
+
+function getSimboloContenedor(tipo, nodo){
+	var simbolo = -1;
+	ts.forEach(function(sim){
+		if (sim.tipo == tipo){
+			if (sim.ambitoContenido[0] <= nodo.nid && sim.ambitoContenido[1] >= nodo.nid){
+				simbolo = sim;	
+				return false;		
+			}
+		}
+	});
+	return simbolo;
+}
+/*
 function getSimbolo(id, tipo, nodo = false){
 	var simbolo = -1;
 	ts.forEach(function(sim){
@@ -219,7 +286,7 @@ function getSimbolo(id, tipo, nodo = false){
 	});
 	return simbolo;
 }
-
+*/
 function asignarAmbitos(ast){	
 	if (!ast.hijos)
 		return false;
@@ -285,20 +352,40 @@ function generarCuadruplos(ast){
 	c4d = ''; //código de 4 direcciones
 	l = 0; //indice etiquetas
 	t  = 0; //indice temporales
-	sp = 0; //stack pointer
-	st = 0; //stack top
-	c4ds = []; //líneas de c4d asociadas a una linea de código fuente
+	
+	sp = genTemp();
+	hp = genTemp();
+
+	//etiqueta de fin del programa
+	let etFinProg = genEt();
+
+	let c4dProg = '';
+	//inicializar el stackpointer en t0
+	c4dProg += '=' + ',' + (0) + ',' + '' + ',' + (sp) + '#' + '' + '|';
+	//inicializar el puntero del montículo t1
+	c4dProg += '=' + ',' + (0) + ',' + '' + ',' + (hp) + '#' + '' + '|';
+	//llamar a la rutina principal
+	c4dProg += 'call,,,principal' + '#' + '' + '|';
+	//al terminar la sentencias de la rutina principal se salta al fin del programa
+	c4dProg += 'jmp,,,' + etFinProg + "#" + '' + '|';
+	//código de las sentencias del programa
+	c4dProg += cuadruplos(ast).c4d;
+	//fin del programa
+	c4dProg += etFinProg + ':' + "#" + '' + '|';
+	return c4dProg;
+	/*
 	var main = getSimbolo('principal', 'funcion');	
 	if (main != -1){
 		st += main.tamanio;		
 		var nodoSents = getHijo(main.nodo,'sents');		
 		return cuadruplos(nodoSents);		
 	}			
+	*/
 }
 
-function mostrarC4Ds(c4d){
-	console.log('-------------------- CUÁDRUPLOS ------------------')	
-	c4ds = c4d.split('|');
+function mostrarC4Ds(c4dProg){
+	console.log('-------------------- CUÁDRUPLOS ------------------')		
+	c4ds = c4dProg.split('|');
 	c4ds.forEach(function(c4d){
 		if (!c4d)
 			return false;
@@ -320,24 +407,75 @@ function mostrarC4Ds(c4d){
 function cuadruplos(ast, etIni = null, etFin = null, etRet = null){	
 
 	switch(ast.tipo){
-		case 'sents':										
+		case 'prog':
+		case 'clase':
+		case 'sents':											
 			var c4dSents = '';
-			for (var i = 0; i < ast.hijos.length; i++) {		
-				//console.log(ast.hijos[i].tipo);						
-				let resSent = cuadruplos(ast.hijos[i], etIni, etFin, etRet);
-				//console.log(resSent);
-				if (resSent && resSent.c4d){					
-					c4dSents += resSent.c4d;					
-				}
+			if (ast.tipo == 'clase'){
+				c4dSents = cuadruplos(ast.hijos[1], etIni, etFin, etRet).c4d; //sentencias de la clase
 			}
-			//console.log('ret ' + c4dSents)
+			else{
+				for (var i = 0; i < ast.hijos.length; i++) {		
+					//console.log(ast.hijos[i].tipo);						
+					let resSent = cuadruplos(ast.hijos[i], etIni, etFin, etRet);
+					//console.log(resSent);
+					if (resSent && resSent.c4d){					
+						c4dSents += resSent.c4d;					
+					}
+				}			
+			}
 			return { c4d: c4dSents };
+
+		case 'llamada':
+			let idFunc = ast.hijos[0].val;
+			let idClase = getSimboloContenedor('clase', ast).id;
+			//todo la clase siempre es la contenedora del nodo?
+			let descFunc = idClase + '%' + idFunc + '%';
+			//console.log(ast);
+			let nodoArgs = getHijo(ast, 'exps');
+			//console.log(nodoArgs);
+			c4dCall = '';
+			let tempsArgs = []; //temporales que contendrán los resultados de la expresiones de los argumentos
+			if (nodoArgs != -1){
+				//tiene argumentos la llamada
+				nodoArgs.hijos.forEach(function(arg){
+					descFunc += getTipo(arg) + '%';	
+					let resExpArg = cuadruplos(arg);
+					c4dCall += resExpArg.c4d;
+					tempsArgs.push(resExpArg.t);
+				});
+				
+			}
+			//cambio de ámbito en el stack
+			//se obtiene el tamaño de la función actual			
+			let tamFunActual = getSimboloContenedor('funcion', ast).tamanio;
+			c4dCall += '+' + ',' + (sp) + ',' + (tamFunActual) + ',' + (sp) + '#' + ast.linea + '|';					
+
+			//se setean los valores de los argumentos
+			tempsArgs.forEach(function(tempArg, j){
+				c4dCall += '+' + ',' + (sp) + ',' + (j) + ',' + 't' + (++t) + '#' + ast.linea + '|';		
+				c4dCall += '<=' + ',' + ('t'+ t) + ',' + (tempArg) + ',' + 'stack' + '#' + ast.linea + '|';
+			});
+			//se llama al método para que se ejecuten sus instrucciones
+			c4dCall += 'call,,,' + descFunc + '#' + '' + '|';
+			//se regresa al ambito origen
+			c4dCall += '-' + ',' + (sp) + ',' + (tamFunActual) + ',' + (sp) + '#' + ast.linea + '|';		
+			return { c4d: c4dCall };
+
+		case 'funcion':
+			let simFun = getFuncion(ast.hijos[1].val, ast); //simbolo de la función
+			let etRetFun = genEt();
+			let c4dFun = 'begin,,,' + simFun.clase + '%' + simFun.id + '%' + simFun.params  + "#" + '' + '|'; //id de la función			
+			c4dFun += cuadruplos(getHijo(ast, 'sents'), etIni, etFin, etRetFun).c4d;
+			c4dFun += etRetFun + ':' + "#" + '' + '|';	//etiqueta de fin de la funcion
+			c4dFun += 'end,,,' + simFun.clase + '%' + simFun.id + '%' + '%' + simFun.params  + "#" + '' + '|'; //id de la función			
+			return { c4d: c4dFun };
 
 		case 'decl':
 			if (ast.hijos.length < 3){ //declaración sin asignación
 				let nodoTipoDecl = ast.hijos[0];
 				if (nodoTipoDecl.tipo == 'id'){
-					let simEstrucDecl = getSimbolo(nodoTipoDecl.val, 'estructura', nodoTipoDecl);
+					//let simEstrucDecl = getSimbolo(nodoTipoDecl.val, 'estructura', nodoTipoDecl);
 					//console.log(simEstrucDecl);					
 					//todo
 				}
@@ -353,9 +491,10 @@ function cuadruplos(ast, etIni = null, etFin = null, etRet = null){
 				asignante = ast.hijos[2];
 
 			if (asignando.tipo == 'id'){
-				var sim = getSimbolo(asignando.val, 'param', ast);
+				var sim = getVar(asignando.val, ast);
+				
 				if (sim == -1){
-					sim = getSimbolo(asignando.val, 'var', ast);
+					sim = getVar(asignando.val, ast);
 				}
 				if (sim != -1){					
 					var pos = sim.posicion;										
@@ -472,7 +611,7 @@ function cuadruplos(ast, etIni = null, etFin = null, etRet = null){
 			let etFinRC = genEt();
 
 			let idRC = ast.hijos[0];
-			let simIdRC = getSimbolo(idRC.val, 'var', ast.hijos[2]);
+			let simIdRC = getVar(idRC.val, ast.hijos[2]);
 
 			//valor desde y hasta
 			let resDesdeRC = cuadruplos(ast.hijos[1]);		
@@ -680,10 +819,8 @@ function cuadruplos(ast, etIni = null, etFin = null, etRet = null){
 			return {etsV: Xor2.etsV.concat(Xor3.etsF), etsF: Xor2.etsF.concat(Xor3.etsV), c4d: c4d };
 
 		case 'id':
-			var sim = getSimbolo(ast.val, 'param', ast);
-			if (sim == -1){
-				var sim = getSimbolo(ast.val, 'var', ast);
-			}
+			var sim = getVar(ast.val, ast);
+			
 			if (sim != -1){					
 				var pos = sim.posicion;														
 				c4d = '+' + ',' + (sp) + ',' + (pos) + ',' + 't'+(++t)+ '#' + ast.linea + '|';				
@@ -698,11 +835,9 @@ function cuadruplos(ast, etIni = null, etFin = null, etRet = null){
 		case 'booleanoLit':
 			c4d = '=' + ',' + (ast.val) + ',' + '' + ',' + ('t'+(++t)) + '#' + ast.linea + '|';
 			return {t: 't' + t, c4d: c4d };
+		default:
+			return;
 	}
-}
-
-function pushC4D(sent, linea){
-	c4ds = c4ds.concat({c4d: sent, linea: linea});
 }
 
 function getSentEt(et){
@@ -723,4 +858,9 @@ function etsToC4D(ets, linea){
 		etsC4d += et + ':#' + linea + '|';
 	});
 	return etsC4d;
+}
+
+function getTipo(nodoE){
+	return 'entero';
+	//todo implementar la función de forma correcta	
 }

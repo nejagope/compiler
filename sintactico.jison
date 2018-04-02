@@ -265,8 +265,8 @@ ARRAY
 ;
 
 EXPS 
-    : EXPS coma E   {{ var arr = $1; $$ = arr.concat($3); }}
-    | E             {{ $$ =  [$1] }}  
+    : EXPS coma E   {{ var arr = $1.hijos; $1.hijos = arr.concat($3);  $$ = $1;  }}    
+    | E             {{  $$ = { tipo: 'exps', hijos: [$1] } }}
 ;
 
 E 
