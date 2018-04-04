@@ -734,8 +734,14 @@ function cuadruplos(ast, etIni = null, etFin = null, etRet = null){
 			return { c4d : c4d };
 
 		case 'retornar':
-			//todo setear el valor en el stack			
-			return {c4d: 'jmp,,,' + etRet + '#' + ast.linea + '|'};			
+			//todo setear el valor en el stack		
+			let funcRet = getSimboloContenedor('funcion', ast); 	
+			let resExpRet = cuadruplos(ast.hijos[0]);
+			let c4dRet = resExpRet.c4d;
+			c4dRet += '+' + ',' + (sp) + ',' + (funcRet.tamanio-1) + ',' + ('t'+ (++t)) + '#' + ast.hijos[0].linea + '|';	
+			c4dRet += '<=' + ',' + ('t' + t) + ',' + (resExpRet.t) + ',' + 'stack' + '#' + ast.hijos[0].linea + '|';			
+			c4dRet += 'jmp,,,' + etRet + '#' + ast.linea + '|';
+			return {c4d: c4dRet};			
 
 		case 'romper':																
 			return {c4d: 'jmp,,,' + etFin + '#' + ast.linea + '|'};			

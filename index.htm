@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GccCompiler</title>
+	<style type="text/css">
+		.lineaEditor{
+			margin: 1px;
+			width: 100%;			
+		}
+		.lineaActual{
+			background-color: #ff8080;
+		}
+		#divLineasEditor{
+			border-width: 1px;
+			border-style: solid;
+			width: 49%;
+			float: left;
+			overflow:auto;
+			height: 400px;
+		}
+		#divLineasC4D{
+			border-width: 1px;
+			border-style: solid;
+			width: 49%;	
+			float: left;
+			overflow:auto;		
+			height: 400px;
+		}
+
+		#divCodigoDebug {			
+			width: 90%;	
+			margin-left: 5%;								
+			margin-right: 5%;								
+		}
+	</style>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<!-- Popper JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>	
+	<div class="container">
+		<div class="well well-lg">GccCompiler</div>
+		<div class="btn-group-vertical">
+  <button type="button" class="btn btn-primary">Apple</button>
+  <button type="button" class="btn btn-primary">Samsung</button>
+  <button type="button" class="btn btn-primary">Sony</button>
+</div>
+		<div id="divCodigoDebug">
+			<div id="divLineasEditor">
+				<table>
+					
+					{%}		
+					
+				</table>				
+				
+			</div>
+			<div id="divLineasC4D">
+				<table>
+					
+					{%}		
+					
+				</table>				
+			</div>
+		</div>
+	</div>
+</body>
+</html>
