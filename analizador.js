@@ -1,6 +1,6 @@
 var parser = require("./parser").parser;
 var fs = require("fs");
-
+/*
 var codigo = fs.readFileSync("test.src", "utf8");
 const AMBITO_GLOBAL = [0, 1000000];
 var ts = [];
@@ -10,7 +10,10 @@ console.log(jsonToString(ast));
 asignarAmbitos(ast);
 llenarTablaSimbolos(ast);
 mostrarTablaSimbolos();
-
+*/
+const AMBITO_GLOBAL = [0, 1000000];
+var ts = [];
+var ast = {};
 var sp = 0;	//stackpointer
 var st = 0; //stacktop
 var hp = 0; //heappointer
@@ -19,8 +22,29 @@ var l = 0;
 var t = 0;
 var c4d = '';
 
-var resCuadruplosProg = generarCuadruplos(ast);
-mostrarC4Ds(resCuadruplosProg);
+function getCodigoIntermedio(codigoAltoNivel){
+	sp = 0;	//stackpointer
+	st = 0; //stacktop
+	hp = 0; //heappointer
+	ht = 0;
+	l = 0;
+	t = 0;
+	c4d = '';
+	try{
+		ast = getAST(codigoAltoNivel);
+		asinarIDs(ast, 0);	
+		asignarAmbitos(ast);
+		llenarTablaSimbolos(ast);	
+		var resCuadruplosProg = generarCuadruplos(ast);
+		return resCuadruplosProg;
+	}catch(ex){
+		return ex;
+	}
+	//mostrarC4Ds(resCuadruplosProg);
+}
+
+exports.getCodigoIntermedio = getCodigoIntermedio;
+
 
 function mostrarTablaSimbolos(){
 	console.log('\n-------------------------- TABLA DE SÍMBOLOS -------------------------');

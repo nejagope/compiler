@@ -22,6 +22,7 @@ function iniciar(route, handle) {
 		console.log("Se ha recibido el post totalmente: " + dataPosteada);		
 		route(pathname, handle, response, dataPosteada);
 		});
+	
   }
   http.createServer(onRequest).listen(8888);
   console.log("Servidor Iniciado.");
